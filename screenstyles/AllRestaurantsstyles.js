@@ -31,32 +31,18 @@ const styles = StyleSheet.create({
     paddingRight: '50%',
   },
   titleText: {
-    width: '60%',
-    top: '15%',
+    width: '100%',
+    top: '45%',
     textAlign: 'center',
     fontSize: 35,
     fontWeight: 'bold',
     color: 'white',
   },
-  modalContainer: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  modalHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 10,
-    borderBottomWidth: 1,
-    borderColor: 'lightgray',
-  },
-  closeModalIcon: {
-    paddingLeft: '5%',
-  },  
   page: {
+    width: '100%',
     flex: 1,
-    borderTopRightRadius: 40,
-    borderTopLeftRadius: 40,
+    // borderTopRightRadius: 40,
+    // borderTopLeftRadius: 40,
     backgroundColor: 'white',
   },
   openButton: {
