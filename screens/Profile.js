@@ -4,6 +4,7 @@ import { SvgXml } from 'react-native-svg';
 import { useNavigation } from '@react-navigation/native';
 import { logoSvgCode, profilepic, editicon, profileicon, phonecallicon, bookicon, calendericon, mailicon, globeicon, logoutIcon } from '../svgData/svgData'; // Import the SVG data
 import { SafeAreaView } from 'react-native-safe-area-context';
+import * as ImagePicker from 'expo-image-picker';
 import styles from '../screenstyles/profileStyles';
 import CheckBox from "expo-checkbox";
 import DateTimePicker from './../node_modules/@react-native-community/datetimepicker/src/datetimepicker';
@@ -38,6 +39,8 @@ const Profile = (props) => {
     const [genderText, setGenderText] = useState('');
     // const [dobText, setDobText] = useState('');
     const [emailText, setEmailText] = useState('');
+    const [pickedImage, setPickedImage] = useState();
+
 
     const closeModal = () => {
       setIsNameModalVisible(false);
@@ -97,6 +100,22 @@ const Profile = (props) => {
       }
     };
 
+    const pickImage = async () => {
+        console.log("-----------------------")
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        console.log(result);
+
+        if (!result.canceled) {
+            setPickedImage(result.assets[0].uri);
+        }
+    };
     const handleLogout = () => {
       // Implement your logout logic here
       navigation.pop();
@@ -130,7 +149,10 @@ const Profile = (props) => {
         />
         <SvgXml xml={logoSvgCode} style={styles.logoImage} />
         <View style={styles.textContainer}>
-            <TouchableOpacity onPress={handleProfileImageTap} style={styles.profile2}>
+            <TouchableOpacity onPress={() => {
+                pickImage().then(r => {
+                    console.log("------")})
+            }} style={styles.profile2}>
                   <SvgXml xml={profilepic} style={styles.profile} />
             </TouchableOpacity>
           <View style={styles.profileText}>
