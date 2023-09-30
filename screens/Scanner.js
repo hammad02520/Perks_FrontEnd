@@ -77,7 +77,7 @@ export default function App(message) {
         <View style={styles.background}>
           {scanned && (
               <Button
-                  title={'Tap to Scan Again'}
+                  title={'Tap to Scan Aga'}
                   onPress={() => setScanned(false)}
               />
           )}
