@@ -19,6 +19,7 @@ import supabase from "../api/supabaseClient";
 import * as Location from "expo-location";
 import styles from "../screenstyles/homeStyles"; // Import styles from the separate file
 import { ScrollView } from "react-native-gesture-handler";
+import {usePerksContext} from "../context";
 
 export default function Home(props) {
   const navigation = useNavigation();
@@ -28,6 +29,9 @@ export default function Home(props) {
   const [locationText, setLocationText] = useState("Your location");
   const [userLocation, setUserLocation] = useState(null);
   const { firstName, lastName, userId } = props.route.params;
+  const {currentUser} = usePerksContext()
+
+  console.log(currentUser)
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);

@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {PerksProvider} from "./context";
 
 import Scanner from './screens/Scanner';
 import Home from './screens/Home';
@@ -106,6 +107,7 @@ export default function MainApp() {
 
   return (
     <NavigationContainer>
+        <PerksProvider>
       <Stack.Navigator>
         <Stack.Screen
           name="Welcome"
@@ -152,6 +154,7 @@ export default function MainApp() {
           }}
         />
       </Stack.Navigator>
+        </PerksProvider>
     </NavigationContainer>
   );
 }
