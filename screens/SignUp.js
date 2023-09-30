@@ -9,6 +9,9 @@ import globalStyles from '../styles';
 import supabase from '../api/supabaseClient';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from '../screenstyles/signupStyles';
+import axios from "axios";
+import {BaseUrl} from "../api/BaseUrl";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function SignUp() {
   const navigation = useNavigation();
@@ -23,26 +26,30 @@ export default function SignUp() {
   const handleSignup = async () => {
     try {
       setIsLoading(true);
-  
-      const { user, session, error } = await supabase.auth.signUp(
-        {
-          email: email,
-          password: password,
-          options: {
-          data: {
-            first_name: firstName,
-            last_name: lastName,
+      const response = await axios.post(`${BaseUrl}/api/auth/register`, {
+        email: email,
+        password: password,
+            fname: firstName,
+            lname: lastName,
             phone_number: phoneNumber,
+           username:firstName
           },
-        },
-    });
-  
-      if (error) {
-        console.error('Sign-up error:', error.message);
-        throw error;
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              "X-CSRFToken": "{{ csrf_token }}"
+            }
+
+          });
+
+      if (response.data.save === true) {
+        navigation.navigate('Login');
+
+      }else {
+        console.error('Sign-up error:');
       }
-  
-      navigation.navigate('Login');
+
+
     } catch (err) {
       console.error('Handle signup error:', err.message);
       Alert.alert('Error', 'An error occurred while signing up.');
@@ -50,7 +57,7 @@ export default function SignUp() {
       setIsLoading(false);
     }
   };
-  
+
   return (
     <ScrollView contentContainerStyle={globalStyles.scrollContainer}>
       <View style={globalStyles.container}>
@@ -142,4 +149,4 @@ export default function SignUp() {
 }
 
 
-  
+

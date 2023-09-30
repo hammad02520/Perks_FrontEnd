@@ -7,6 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import styles from '../screenstyles/profileStyles';
 import CheckBox from "expo-checkbox";
 import DateTimePicker from './../node_modules/@react-native-community/datetimepicker/src/datetimepicker';
+import {usePerksContext} from "../context";
 
 const ModalComponent = ({ isVisible, onClose, children }) => (
   <Modal visible={isVisible} transparent={true} animationType="slide">
@@ -30,8 +31,8 @@ const Profile = (props) => {
     const [isEmailModalVisible, setIsEmailModalVisible] = useState(false);
     const [agreeFemale, setAgreeFemale] = useState(false); // for the checkbox
     const [agreeMale, setAgreeMale] = useState(false); // for the checkbox
-    const {firstName, lastName, email, phoneNumber} = props.route.params;
-
+    // const {firstName, lastName, email, phoneNumber} = props.route.params;
+    const {currentUser} = usePerksContext()
     const [nameText, setNameText] = useState('');
     const [numberText, setNumberText] = useState('');
     const [genderText, setGenderText] = useState('');
@@ -89,7 +90,7 @@ const Profile = (props) => {
     const handlePhoneNumberChange = (text) => {
       // Remove any non-digit characters from the input
       const cleanedPhoneNumber = text.replace(/[^0-9]/g, '');
-  
+
       // Limit the input to 10 digits
       if (cleanedPhoneNumber.length <= 10) {
         setNumberText(cleanedPhoneNumber);
@@ -101,7 +102,7 @@ const Profile = (props) => {
       navigation.pop();
       navigation.navigate('Login');
     };
-    
+
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [date, setDate] = useState(new Date());
 
@@ -116,22 +117,25 @@ const Profile = (props) => {
     console.log('the user has called')
   };
 
-  return (
+    let onDateChange = () => {
+
+    };
+    return (
     <SafeAreaView style={styles.container}>
 
       <View style={styles.backgroundContainer}>
-        <Image  
+        <Image
           source={require('../assets/images/darkPurpleBackground.png')}
           style={styles.backgroundImage}
         />
-        <SvgXml xml={logoSvgCode} style={styles.logoImage} /> 
+        <SvgXml xml={logoSvgCode} style={styles.logoImage} />
         <View style={styles.textContainer}>
             <TouchableOpacity onPress={handleProfileImageTap} style={styles.profile2}>
                   <SvgXml xml={profilepic} style={styles.profile} />
             </TouchableOpacity>
           <View style={styles.profileText}>
-            <Text style={styles.nameText}>{firstName} {lastName}</Text>
-            <Text style={styles.emailText}>{email}</Text>
+            <Text style={styles.nameText}>{currentUser?.fname} {currentUser?.lname}</Text>
+            <Text style={styles.emailText}>{currentUser?.email}</Text>
           </View>
         </View>
       </View>
@@ -141,14 +145,14 @@ const Profile = (props) => {
             {/* Rectangle containers */}
             <View style={styles.rectangleContainer}>
                 <SvgXml xml={profileicon} style={styles.profileIcon} />
-                <Text style={styles.profileTextCenter}>{firstName} {lastName}</Text>
+                <Text style={styles.profileTextCenter}>{currentUser?.fname} {currentUser?.lname}</Text>
                 <TouchableOpacity onPress={openNameModal}>
                     <SvgXml xml={editicon} style={styles.editIcon} />
                 </TouchableOpacity>
             </View>
             <View style={[styles.rectangleContainer]}>
                 <SvgXml xml={phonecallicon} style={styles.profileIcon} />
-                <Text style={styles.profileTextCenter}>{phoneNumber}</Text>
+                <Text style={styles.profileTextCenter}>{currentUser.phone_number}</Text>
                 <TouchableOpacity onPress={openNumberModal}>
                     <SvgXml xml={editicon} style={styles.editIcon} />
                 </TouchableOpacity>
@@ -200,7 +204,7 @@ const Profile = (props) => {
                 placeholder="Enter your new username"
                 value={nameText}
                 onChangeText={setNameText}
-              />            
+              />
             </ModalComponent>
 
             <ModalComponent isVisible={isNumberModalVisible} onClose={closeModal}>
@@ -267,7 +271,7 @@ const Profile = (props) => {
                 placeholder="Enter your new email"
                 value={emailText}
                 onChangeText={setEmailText}
-              />            
+              />
             </ModalComponent>
 
             <TouchableOpacity onPress={handleLogout} style={[styles.logoutButton]}>
@@ -278,7 +282,7 @@ const Profile = (props) => {
       </View>
 
     </SafeAreaView>
-    
+
   );
 };
 
