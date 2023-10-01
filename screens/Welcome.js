@@ -27,15 +27,15 @@ const WelcomePage = (props) => {
             const userData = await AsyncStorage.getItem('user');
             const  token = await  AsyncStorage.getItem("authToken")
 
-            if (!userData) {
-                props.navigation.navigate('Login');
-                return;
-            }
+            // if (!userData) {
+            //     props.navigation.navigate('Login');
+            //     return;
+            // }
             setToken(token)
             const transformedData = JSON.parse(userData);
             setCurrentUser(transformedData)
 
-            props.navigation.navigate('MainScreens');
+            // props.navigation.navigate('MainScreens');
         };
 
         tryLogin()
