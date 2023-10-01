@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Button, Alert } from 'react-native';
+import { Text, View, StyleSheet, Alert } from 'react-native';
+import {Button} from "@rneui/themed";
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../screenstyles/scannerStyles';
@@ -91,6 +92,8 @@ export default function App(message) {
               Scan the Perks QR code to get your exclusive points back.
             </Text>
             <Button
+                style={{ marginTop: 10, borderRadius:15, padding:1, elevation:3}}
+                titleStyle={{ fontWeight:'bold' }}
                 title={'Tap to Scan'}
                 onPress={() => setScanned(false)}
             />
