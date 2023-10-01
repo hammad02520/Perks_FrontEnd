@@ -46,15 +46,33 @@ export default function App(message) {
             },
           }
       );
+      let points = parseFloat(response.data?.start_amount) / 2000
+      console.log(points)
 
-      if (response.data) {
-        const message = `Congratulations! You just earned ${response.data?.points} points at ${response.data?.restraurant?.name}.`;
-        alert(message, [
+      const pointsRsp =  await  axios.post(
+          `${BaseUrl}api/user-restraurant`,
+          {
+            user: currentUser.id,
+            restraurant:response.data?.restraurant.id ,
+            total_points: points
+          }
+      )
+      console.log(pointsRsp.data)
+
+      if (pointsRsp.data) {
+        navigation.navigate('SpecificVendorStack', {screen: 'SpecificVendor',
+          params: {
+            restraurant: response.data?.restraurant.name,
+            restId: response.data?.restraurant.id,
+            total_points_earned: points
+          }
+        });
+        const message = `Congratulations! You just earned ${points} points at ${response.data?.restraurant?.name}.`;
+        Alert.alert(message, [
           {
             text: 'OK',
             onPress: () => {
               setScanned(false);
-              navigation.navigate('Vendor');
               // Allow scanning again after displaying the message
             },
           },

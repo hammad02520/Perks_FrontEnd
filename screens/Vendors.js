@@ -7,15 +7,18 @@ import { useNavigation } from '@react-navigation/native';
 import globalStyles from '../styles';
 import styles from '../screenstyles/vendorsStyles';
 import { Platform } from 'react-native';
+import {usePerksContext} from "../context";
 
-const Vendor = () => {
+const Vendor = (props) => {
   const navigation = useNavigation();
+
+
 
   return (
     <SafeAreaView style={[globalStyles.container, styles.container]}>
 
 {/* title depending on whether the user wants to see their restaurants or nearby restaurants */}
-      <Text style={styles.titleText} >All your restaurants</Text> 
+      <Text style={styles.titleText} >All your restaurants</Text>
       {/* or 'Restaurants near you' */}
 
 {/* restaurants pulled from database depending on request */}
@@ -102,7 +105,7 @@ const Vendor = () => {
         </View>
     </TouchableOpacity>
 
-      
+
   </SafeAreaView>
   );
 };
