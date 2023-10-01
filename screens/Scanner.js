@@ -62,7 +62,7 @@ export default function App(message) {
           `${BaseUrl}api/user-restraurant`,
           {
             user: currentUser.id,
-            restraurant:response.data?.restraurant.id ,
+            restraurant:response.data?.restraurant.id,
             total_points: points
           }
       )
@@ -87,12 +87,14 @@ export default function App(message) {
         ]);
         setScanned(false);
       }
-      
+
     } catch (err) {
       alert('An error occurred:', err.message);
       setScanned(false); // Allow scanning again after the alert
     }
   };
+
+  console.log(scanned)
 
   if (hasPermission === null) {
     return <Text style={styles.statusText}>Requesting camera permission</Text>;
@@ -106,7 +108,7 @@ export default function App(message) {
         <View style={styles.background}>
 
           <BarCodeScanner
-              onBarCodeScanned={scanned ? handleBarCodeScanned : undefined}
+              onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
               style={styles.barcodeScanner}
           />
         </View>
