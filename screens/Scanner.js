@@ -76,23 +76,24 @@ export default function App(message) {
   return (
       <View style={styles.container}>
         <View style={styles.background}>
-          {scanned && (
-              <Button
-                  title={'Tap to Scan Aga'}
-                  onPress={() => setScanned(false)}
-              />
-          )}
+
           <BarCodeScanner
               onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
               style={styles.barcodeScanner}
           />
         </View>
+
+
         <View style={styles.overlay}>
           <View style={styles.header}>
             <Text style={styles.scanText}>Scan QR code</Text>
             <Text style={styles.explanationText}>
               Scan the Perks QR code to get your exclusive points back.
             </Text>
+            <Button
+                title={'Tap to Scan'}
+                onPress={() => setScanned(false)}
+            />
           </View>
         </View>
       </View>

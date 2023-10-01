@@ -42,7 +42,7 @@ export default function Login(){
 
             if (response.data?.token) {
                 await AsyncStorage.setItem('authToken', response.data.token);
-                await AsyncStorage.setItem('user', response.data.user);
+                await AsyncStorage.setItem('user', JSON.stringify(response.data.user));
                 setCurrentUser(response.data.user);
 
                 navigation.navigate('MainScreens', {

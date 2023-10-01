@@ -28,7 +28,6 @@ export default function Home(props) {
   const [recommendationText, setRecommendationText] = useState("");
   const [locationText, setLocationText] = useState("Your location");
   const [userLocation, setUserLocation] = useState(null);
-  const { firstName, lastName, userId } = props.route.params;
   const {currentUser} = usePerksContext()
 
   console.log(currentUser)
@@ -95,7 +94,7 @@ export default function Home(props) {
         >
           <View style={styles.greetingText}>
             <Text style={styles.hiText}>
-              {greeting}, {firstName} {lastName}
+              {greeting}, {currentUser?.fname} {currentUser?.lname}
             </Text>
           </View>
           {/* <TouchableOpacity
