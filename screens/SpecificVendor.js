@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { View, Text, StyleSheet, ImageBackground, Image, TouchableOpacity, Alert } from 'react-native';
 import { logoSvgCode } from './Welcome'; // Adjust the path to match your file structure
 import { SvgXml } from 'react-native-svg';
@@ -8,6 +8,9 @@ import globalStyles from '../styles';
 import styles from '../screenstyles/specificVendorStyles';
 import ProgressBar from 'react-native-progress/Bar'; // Import the ProgressBar component
 import { ScrollView } from 'react-native-gesture-handler';
+import {usePerksContext} from "../context";
+import axios from "axios";
+import {BaseUrl} from "../api/BaseUrl";
 
 const RewardCard = ({ title, points, imageSource }) => {
   const handleGetReward = () => {
@@ -41,8 +44,34 @@ const RewardCard = ({ title, points, imageSource }) => {
   );
 };
 
-const Vendor = () => {
+const Vendor = (props) => {
   const navigation = useNavigation();
+    const {currentUser} = usePerksContext();
+    const [userResturantData, setUserResturantData] = useState();
+    const {restraurant, total_points_earned, restId} = props.route.params;
+
+    useEffect(() => {
+        async function userRstDataLoad (){
+            const response = await axios.get(
+                `${BaseUrl}api/user-restraurant?userId=${currentUser.id}`,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+
+            const restaurants = response.data
+            console.log(restId)
+
+            const data = restaurants.find((rst) => rst.restraurant.id === restId);
+            console.log(data)
+            setUserResturantData(data)
+        }
+        userRstDataLoad()
+    }, []);
+
+    console.log(userResturantData);
 
   return (
     <SafeAreaView style={[globalStyles.container, styles.container]}>
@@ -51,8 +80,8 @@ const Vendor = () => {
       <View style={globalStyles.card}>
         <ImageBackground style={styles.imagesomething} source={require('../assets/images/darkBlueBackgroundmodified.png')}>
           <View style={globalStyles.contentOfCard}>
-            <Text style={globalStyles.restaurantName}>Shawarma 27</Text>
-            <Text style={globalStyles.points}>100pts</Text>
+            <Text style={globalStyles.restaurantName}>{userResturantData?.restraurant.name}</Text>
+            <Text style={globalStyles.points}>{userResturantData?.total_points}pts</Text>
             <Text style={globalStyles.remainingPoints}>1900pts till you can get a free drink</Text>
             <Text style={globalStyles.userName}>Hassan</Text>
           </View>
