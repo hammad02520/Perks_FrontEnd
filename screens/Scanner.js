@@ -52,12 +52,13 @@ export default function App(message) {
           {
             text: 'OK',
             onPress: () => {
+              setScanned(false);
               navigation.navigate('Vendor');
-              setScanned(false); // Allow scanning again after displaying the message
+              // Allow scanning again after displaying the message
             },
           },
         ]);
-        setScanned(false);
+
       }
     } catch (err) {
       alert('An error occurred:', err.message);
