@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Button, Alert } from 'react-native';
+import { Text, View, StyleSheet, Alert } from 'react-native';
+import {Button} from "@rneui/themed";
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../screenstyles/scannerStyles';
@@ -52,12 +53,13 @@ export default function App(message) {
           {
             text: 'OK',
             onPress: () => {
+              setScanned(false);
               navigation.navigate('Vendor');
-              setScanned(false); // Allow scanning again after displaying the message
+              // Allow scanning again after displaying the message
             },
           },
         ]);
-        setScanned(false);
+
       }
     } catch (err) {
       alert('An error occurred:', err.message);
@@ -75,23 +77,26 @@ export default function App(message) {
   return (
       <View style={styles.container}>
         <View style={styles.background}>
-          {scanned && (
-              <Button
-                  title={'Tap to Scan Aga'}
-                  onPress={() => setScanned(false)}
-              />
-          )}
+
           <BarCodeScanner
               onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
               style={styles.barcodeScanner}
           />
         </View>
+
+
         <View style={styles.overlay}>
           <View style={styles.header}>
             <Text style={styles.scanText}>Scan QR code</Text>
             <Text style={styles.explanationText}>
               Scan the Perks QR code to get your exclusive points back.
             </Text>
+            <Button
+                style={{ marginTop: 10, borderRadius:15, padding:1, elevation:3}}
+                titleStyle={{ fontWeight:'bold' }}
+                title={'Tap to Scan'}
+                onPress={() => setScanned(false)}
+            />
           </View>
         </View>
       </View>

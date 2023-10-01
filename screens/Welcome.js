@@ -1,10 +1,12 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import globalStyles from '../styles';
 import styles from '../screenstyles/welcomeStyles';
+import {usePerksContext} from "../context";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const logoSvgCode = `
   <svg width="83" height="135" viewBox="0 0 83 135" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -15,8 +17,30 @@ export const logoSvgCode = `
   </svg>
 `;
 
-const WelcomePage = () => {
-  const navigation = useNavigation();
+const WelcomePage = (props) => {
+    const [token, setToken] = useState();
+    const navigation = useNavigation();
+    const {setCurrentUser} = usePerksContext()
+
+    useEffect(() => {
+        const tryLogin = async () => {
+            const userData = await AsyncStorage.getItem('user');
+            const  token = await  AsyncStorage.getItem("authToken")
+
+            // if (!userData) {
+            //     props.navigation.navigate('Login');
+            //     return;
+            // }
+            setToken(token)
+            const transformedData = JSON.parse(userData);
+            setCurrentUser(transformedData)
+
+            // props.navigation.navigate('MainScreens');
+        };
+
+        tryLogin()
+
+    }, [token]);
   return (
 
     <SafeAreaView style={[globalStyles.container, styles.container]}>
@@ -37,8 +61,11 @@ const WelcomePage = () => {
         <TouchableOpacity
           style={styles.touchableButton}
           onPress={() => {
-            navigation.navigate('Login');
-            // navigation.navigate('MainScreens', {screen: 'Profile'});
+              if (token){
+                  navigation.navigate('MainScreens', {screen: 'Profile'});
+              }else {
+                  navigation.navigate('Login');
+              }
           }}
         >
           <Text style={styles.buttonText}>Get started for free    &gt; </Text>
