@@ -61,11 +61,10 @@ const Vendor = (props) => {
                 }
             );
 
-            const resturants = response.data
+            const restaurants = response.data
+            console.log(restId)
 
-            const data = await resturants.find( rst => {
-                rst.restraurant.id === restId
-            })
+            const data = restaurants.find((rst) => rst.restraurant.id === restId);
             console.log(data)
             setUserResturantData(data)
         }
@@ -81,8 +80,8 @@ const Vendor = (props) => {
       <View style={globalStyles.card}>
         <ImageBackground style={styles.imagesomething} source={require('../assets/images/darkBlueBackgroundmodified.png')}>
           <View style={globalStyles.contentOfCard}>
-            <Text style={globalStyles.restaurantName}>Shawarma 27</Text>
-            <Text style={globalStyles.points}>100pts</Text>
+            <Text style={globalStyles.restaurantName}>{userResturantData?.restraurant.name}</Text>
+            <Text style={globalStyles.points}>{userResturantData?.total_points}pts</Text>
             <Text style={globalStyles.remainingPoints}>1900pts till you can get a free drink</Text>
             <Text style={globalStyles.userName}>Hassan</Text>
           </View>

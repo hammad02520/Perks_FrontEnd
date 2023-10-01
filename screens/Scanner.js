@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Alert } from 'react-native';
 import {Button} from "@rneui/themed";
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect  } from '@react-navigation/native';
 import styles from '../screenstyles/scannerStyles';
 import { usePerksContext } from '../context';
 import axios from 'axios';
@@ -14,6 +14,16 @@ export default function App(message) {
   const [scanned, setScanned] = useState(false);
   const { currentUser } = usePerksContext();
 
+  useFocusEffect(
+      React.useCallback(() => {
+        // This function is called when the screen comes into focus
+        setScanned(false);
+        return () => {
+          // Cleanup if necessary
+        };
+      }, [])
+  );
+
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
@@ -24,7 +34,6 @@ export default function App(message) {
   }, []);
 
   const handleBarCodeScanned = async ({ type, data }) => {
-    if (scanned) return; // Only handle the scan once
     setScanned(true);
 
     if (!currentUser) {
@@ -68,17 +77,17 @@ export default function App(message) {
           }
         });
         const message = `Congratulations! You just earned ${points} points at ${response.data?.restraurant?.name}.`;
-        Alert.alert(message, [
+        alert(message, [
           {
             text: 'OK',
             onPress: () => {
               setScanned(false);
-              // Allow scanning again after displaying the message
             },
           },
         ]);
-
+        setScanned(false);
       }
+      
     } catch (err) {
       alert('An error occurred:', err.message);
       setScanned(false); // Allow scanning again after the alert
@@ -97,7 +106,7 @@ export default function App(message) {
         <View style={styles.background}>
 
           <BarCodeScanner
-              onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+              onBarCodeScanned={scanned ? handleBarCodeScanned : undefined}
               style={styles.barcodeScanner}
           />
         </View>
@@ -113,7 +122,7 @@ export default function App(message) {
                 style={{ marginTop: 10, borderRadius:15, padding:1, elevation:3}}
                 titleStyle={{ fontWeight:'bold' }}
                 title={'Tap to Scan'}
-                onPress={() => setScanned(false)}
+                onPress={() => setScanned(true)}
             />
           </View>
         </View>
