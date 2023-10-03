@@ -83,7 +83,6 @@ const Rewards = () => {
 
   async function loadData() {
     const rewards_to_redeem = await AsyncStorage.getItem('rewards_to_redeem');
-    console.log(rewards_to_redeem)
 
     if(rewards_to_redeem){
       setItemsToRedeem(JSON.parse(rewards_to_redeem))
@@ -94,7 +93,6 @@ const Rewards = () => {
   }, [itemsToRedeem]);
 
   const handleRedeemPress = async (item) => {
-    console.log(item)
     setLoadingRedeem(true);
     setShowModal(true);
     try {
