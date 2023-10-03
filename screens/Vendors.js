@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import { View, Text, Image, TouchableOpacity, FlatList } from 'react-native';
 import { logoSvgCode } from './Welcome'; // Adjust the path to match your file structure
 import { SvgXml } from 'react-native-svg';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -8,10 +8,35 @@ import globalStyles from '../styles';
 import styles from '../screenstyles/vendorsStyles';
 import { Platform } from 'react-native';
 import {usePerksContext} from "../context";
+import axios from "axios";
+import {BaseUrl} from "../api/BaseUrl";
 
 const Vendor = (props) => {
   const navigation = useNavigation();
+    const [restaurantss, setRestaurantss] = useState();
+    const {currentUser} = usePerksContext();
 
+    useEffect(() => {
+        console.log("-------------------------------------------------")
+        async function loadRestaurants() {
+            try{
+                const response = await axios.get(
+                    `${BaseUrl}api/user-restraurant?userId=${currentUser?.id}`,
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    }
+                );
+                const data = response.data
+                console.log(data)
+                setRestaurantss(data)
+            }catch (e) {
+                alert(`Error ${e.message}`)
+            }
+        }
+        loadRestaurants()
+    }, []);
 
 
   return (

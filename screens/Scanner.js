@@ -8,6 +8,7 @@ import { usePerksContext } from '../context';
 import axios from 'axios';
 import { BaseUrl } from '../api/BaseUrl';
 
+
 export default function App(message) {
   const navigation = useNavigation();
   const [hasPermission, setHasPermission] = useState(null);

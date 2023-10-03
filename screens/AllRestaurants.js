@@ -1,17 +1,45 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { View, Text, Image, TouchableOpacity, ImageBackground, ScrollView } from 'react-native';
 import { SearchBar } from '@rneui/themed';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../screenstyles/AllRestaurantsstyles';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {usePerksContext} from "../context";
+import axios from "axios";
+import {BaseUrl} from "../api/BaseUrl";
 
 const AllRestaurants = () => {
   const navigation = useNavigation();
+    const [restaurantss, setRestaurantss] = useState();
+    const {currentUser} = usePerksContext();
 
-  const [searchText, setSearchText] = useState('');  
+    useEffect(() => {
+        async function loadRestaurants() {
+        try{
+            const response = await axios.get(
+                `${BaseUrl}api/user-restraurant?userId=${currentUser?.id}`,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+            const data = response.data
+            console.log(data)
+            setRestaurantss(data)
+        }catch (e) {
+            alert(`Error ${e.message}`)
+        }
+        }
+
+        loadRestaurants();
+
+    }, []);
+
+  const [searchText, setSearchText] = useState('');
   const [modalFilteredRestaurants, setModalFilteredRestaurants] = useState([]);
-  
+
   const restaurants = [
     {
       name: 'Shishi',
@@ -34,30 +62,36 @@ const AllRestaurants = () => {
   // Filter restaurants based on the user's input
   const handleOnChangeText = (text) => {
     setSearchText(text);
-  
-    const filtered = restaurants.filter((restaurant) =>
-      restaurant.name.toLowerCase().includes(text.toLowerCase())
+
+    const filtered = restaurantss?.filter((restaurant) =>
+      restaurant.restraurant.name.toLowerCase().includes(text.toLowerCase())
     );
     setModalFilteredRestaurants(filtered);
-  };  
+  };
 
   const renderRestaurant = (restaurant) => (
     <TouchableOpacity
       style={styles.openButton}
       activeOpacity={0.5}
       onPress={() => {
-        navigation.navigate('SpecificVendorStack', { screen: 'SpecificVendor' });
+        navigation.navigate('SpecificVendorStack', { screen: 'SpecificVendor',
+            params: {
+                restraurant: restaurant?.restraurant.name,
+                restId: restaurant?.restraurant.id,
+                total_points_earned: 10
+            }
+        });
       }}
-      key={restaurant.name}
+      key={restaurant?.id}
     >
       <Image
         resizeMode="contain"
         style={styles.restaurantImage}
-        source={restaurant.imageSource}
+        source={restaurant?.restraurant?.pic}
       />
       <View style={styles.restaurantInfo}>
-        <Text style={styles.restaurantname}>{restaurant.name}</Text>
-        <Text style={styles.pointsCard}>points: {restaurant.points}</Text>
+        <Text style={styles.restaurantname}>{restaurant?.restraurant.name}</Text>
+        <Text style={styles.pointsCard}>points: {restaurant?.total_points}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -87,7 +121,7 @@ const AllRestaurants = () => {
               />
               {modalFilteredRestaurants.length > 0
                 ? modalFilteredRestaurants.map(renderRestaurant)
-                : restaurants.map(renderRestaurant)}
+                : restaurantss?.map(renderRestaurant)}
             </ScrollView>
     </SafeAreaView>
   );
