@@ -78,7 +78,6 @@ const AllRestaurants = () => {
             params: {
                 restraurant: restaurant?.restraurant.name,
                 restId: restaurant?.restraurant.id,
-                total_points_earned: 10
             }
         });
       }}

@@ -13,7 +13,7 @@ import {BaseUrl} from "../api/BaseUrl";
 
 const Vendor = (props) => {
   const navigation = useNavigation();
-    const [restaurantss, setRestaurantss] = useState();
+    const [restaurants, setRestaurants] = useState();
     const {currentUser} = usePerksContext();
 
     useEffect(() => {
@@ -30,7 +30,7 @@ const Vendor = (props) => {
                 );
                 const data = response.data
                 console.log(data)
-                setRestaurantss(data)
+                setRestaurants(data)
             }catch (e) {
                 alert(`Error ${e.message}`)
             }
@@ -45,6 +45,40 @@ const Vendor = (props) => {
 {/* title depending on whether the user wants to see their restaurants or nearby restaurants */}
       <Text style={styles.titleText} >All your restaurants</Text>
       {/* or 'Restaurants near you' */}
+
+
+     {restaurants?.length > 0 ? (
+         <FlatList
+             data={restaurants}
+             renderItem={({item}) => (
+                 <View style={{flex:1, height:50}}>
+                 <TouchableOpacity
+                     style={styles.openButton}
+                     activeOpacity={0.5}
+                     onPress={() => {
+                         navigation.navigate('SpecificVendorStack', { screen: 'SpecificVendor',
+                             params: {
+                                 restraurant: item?.restraurant.name,
+                                 restId: item?.restraurant.id,
+                             }
+                         });
+                     }}
+                 >
+                     <Image resizeMode="stretch" style={styles.shawarmaImg} source={item?.restraurant?.pic}/>
+                     <View style={styles.restaurantInfo}>
+                         <Text style={styles.restaurantname}>{item?.restraurant.name}</Text>
+                         <Text style={styles.pointsCard}>points: {item?.total_points}</Text>
+                     </View>
+                 </TouchableOpacity>
+                 </View>
+             )}
+             keyExtractor={item => item.id}
+         />
+     ) : (
+         <Text style={[styles.restaurantname, {color:"black"}]}>No Restaurants</Text>
+     )}
+
+
 
 {/* restaurants pulled from database depending on request */}
     <TouchableOpacity

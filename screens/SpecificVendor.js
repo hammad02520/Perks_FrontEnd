@@ -48,7 +48,7 @@ const Vendor = (props) => {
   const navigation = useNavigation();
     const {currentUser} = usePerksContext();
     const [userResturantData, setUserResturantData] = useState();
-    const {restraurant, total_points_earned, restId} = props.route.params;
+    const {restraurant, restId} = props.route.params;
 
     useEffect(() => {
         async function userRstDataLoad (){
