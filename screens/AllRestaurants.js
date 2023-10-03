@@ -18,7 +18,7 @@ const AllRestaurants = () => {
         async function loadRestaurants() {
         try{
             const response = await axios.get(
-                `${BaseUrl}api/user-restraurant?userId=${currentUser?.id}`,
+                `${BaseUrl}/api/user-restraurant?userId=${currentUser?.id}`,
                 {
                     headers: {
                         'Content-Type': 'application/json',

@@ -11,9 +11,34 @@ import { ScrollView } from 'react-native-gesture-handler';
 import {usePerksContext} from "../context";
 import axios from "axios";
 import {BaseUrl} from "../api/BaseUrl";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const RewardCard = ({ title, points, imageSource }) => {
-  const handleGetReward = () => {
+const RewardCard = ({ title, points, imageSource, key }) => {
+
+  const handleGetReward = async () => {
+      const rewards_to_redeem = await AsyncStorage.getItem('rewards_to_redeem');
+
+      if (rewards_to_redeem){
+          const rewards_array = JSON.parse(rewards_to_redeem)
+          rewards_array.push({
+              id:key,
+              name:title,
+              image:imageSource,
+              points:points
+          })
+      }else {
+          let rewards = []
+
+          rewards.push({
+              id:key,
+              name:title,
+              image:imageSource,
+              points:points
+          })
+
+          await AsyncStorage.setItem('rewards_to_redeem', JSON.stringify(rewards));
+      }
+
     // Show an alert when the "GET" button is pressed
     Alert.alert(
       'Reward Purchased',
@@ -31,8 +56,8 @@ const RewardCard = ({ title, points, imageSource }) => {
   };
 
   return (
-    <View style={globalStyles.rewardContainer}>
-      <Image style={globalStyles.rewardImg} source={imageSource} />
+    <View style={globalStyles.rewardContainer} key={key}>
+      <Image style={globalStyles.rewardImg} source={{uri:imageSource}} />
       <View style={globalStyles.rewardInfo}>
         <Text style={globalStyles.rewardCard}>{title}</Text>
         <Text style={globalStyles.pointsCard}>Points: {points}</Text>
@@ -48,12 +73,13 @@ const Vendor = (props) => {
   const navigation = useNavigation();
     const {currentUser} = usePerksContext();
     const [userResturantData, setUserResturantData] = useState();
+    const [restaurantAwards, setRestaurantAwards] = useState([]);
     const {restraurant, restId} = props.route.params;
 
     useEffect(() => {
         async function userRstDataLoad (){
             const response = await axios.get(
-                `${BaseUrl}api/user-restraurant?userId=${currentUser.id}`,
+                `${BaseUrl}/api/user-restraurant?userId=${currentUser.id}`,
                 {
                     headers: {
                         'Content-Type': 'application/json',
@@ -61,8 +87,18 @@ const Vendor = (props) => {
                 }
             );
 
+
+            const awardsData = await axios.get(
+                `${BaseUrl}/api/award?restraurantId=${restId}`,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+            setRestaurantAwards(awardsData.data)
             const restaurants = response.data
-            console.log(restId)
+            console.log(awardsData.data)
 
             const data = restaurants.find((rst) => rst.restraurant.id === restId);
             console.log(data)
@@ -97,12 +133,17 @@ const Vendor = (props) => {
       </View>
         <Text style={globalStyles.leftTitle}>Available rewards</Text>
       <ScrollView style={styles.scrollcontainer}>
-        <RewardCard title="Free soda" points="1000" imageSource={require('../assets/images/soda.png')} />
-        <RewardCard title="Free shawarma" points="2800" imageSource={require('../assets/images/shawarma2.png')} />
-        <RewardCard title="Free burger" points="3000" imageSource={require('../assets/images/burger2.png')} />
-        <RewardCard title="Free soda" points="1000" imageSource={require('../assets/images/soda.png')} />
-        <RewardCard title="Free shawarma" points="2800" imageSource={require('../assets/images/shawarma2.png')} />
-        <RewardCard title="Free burger" points="3000" imageSource={require('../assets/images/burger2.png')} />
+          {restaurantAwards?.length > 0
+              ? restaurantAwards.map((award) => {
+                  return <RewardCard title={award?.product} points={award?.points} imageSource={BaseUrl+award?.pic}  key={award?.id}/>
+              } )
+              : <Text style={[styles.restaurantname, {color:"black"}]}>No Awards Yet!!!</Text>}
+
+        {/*<RewardCard title="Free shawarma" points="2800" imageSource={require('../assets/images/shawarma2.png')} />*/}
+        {/*<RewardCard title="Free burger" points="3000" imageSource={require('../assets/images/burger2.png')} />*/}
+        {/*<RewardCard title="Free soda" points="1000" imageSource={require('../assets/images/soda.png')} />*/}
+        {/*<RewardCard title="Free shawarma" points="2800" imageSource={require('../assets/images/shawarma2.png')} />*/}
+        {/*<RewardCard title="Free burger" points="3000" imageSource={require('../assets/images/burger2.png')} />*/}
       </ScrollView>
     </SafeAreaView>
   );

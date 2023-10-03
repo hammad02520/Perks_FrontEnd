@@ -21,7 +21,7 @@ const Vendor = (props) => {
         async function loadRestaurants() {
             try{
                 const response = await axios.get(
-                    `${BaseUrl}api/user-restraurant?userId=${currentUser?.id}`,
+                    `${BaseUrl}/api/user-restraurant?userId=${currentUser?.id}`,
                     {
                         headers: {
                             'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ const Vendor = (props) => {
                          });
                      }}
                  >
-                     <Image resizeMode="stretch" style={styles.shawarmaImg} source={item?.restraurant?.pic}/>
+                     <Image resizeMode="stretch" style={styles.shawarmaImg} source={{uri:BaseUrl+item?.restraurant?.pic}}/>
                      <View style={styles.restaurantInfo}>
                          <Text style={styles.restaurantname}>{item?.restraurant.name}</Text>
                          <Text style={styles.pointsCard}>points: {item?.total_points}</Text>
