@@ -8,6 +8,7 @@ import { usePerksContext } from '../context';
 import axios from 'axios';
 import { BaseUrl } from '../api/BaseUrl';
 
+
 export default function App(message) {
   const navigation = useNavigation();
   const [hasPermission, setHasPermission] = useState(null);
@@ -48,7 +49,7 @@ export default function App(message) {
 
     try {
       const response = await axios.get(
-          `${BaseUrl}api/coupon?querytype=single&coupon=${data}`,
+          `${BaseUrl}/api/coupon?querytype=single&coupon=${data}`,
           {
             headers: {
               'Content-Type': 'application/json',
@@ -59,7 +60,7 @@ export default function App(message) {
       console.log(points)
 
       const pointsRsp =  await  axios.post(
-          `${BaseUrl}api/user-restraurant`,
+          `${BaseUrl}/api/user-restraurant`,
           {
             user: currentUser.id,
             restraurant:response.data?.restraurant.id,

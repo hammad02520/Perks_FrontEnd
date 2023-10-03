@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,9 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import globalStyles from '../styles';
 import styles from '../screenstyles/rewardStyles';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from "axios";
+import {BaseUrl} from "../api/BaseUrl";
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -51,16 +54,16 @@ const RewardItem = ({ item, onPress }) => {
       default:
         return require('../assets/images/soda.png');
     }
-  };  
+  };
 
   return (
     <View key={item.title} style={[containerStyle, { width: windowWidth * 0.9, backgroundColor }]}>
       <View style={globalStyles.borderradiusforimage}>
-        <Image source={getImageSource()} style={globalStyles.image} />
+        <Image source={{uri:item?.image}} style={globalStyles.image} />
       </View>
       <View style={styles.textContainer}>
-        <Text style={styles.text}>{item.title}</Text>
-        <Text style={styles.additionalText}>{item.description}</Text>
+        <Text style={styles.text}>{item.name}</Text>
+        <Text style={styles.additionalText}>You only spent {item.points} points</Text>
       </View>
       {!item.redeemed && (
         <TouchableOpacity style={globalStyles.getAndRedeemButton} onPress={() => onPress(item)}>
@@ -73,11 +76,82 @@ const RewardItem = ({ item, onPress }) => {
 
 const Rewards = () => {
   const [showModal, setShowModal] = useState(false);
+  const [itemsToRedeem, setItemsToRedeem] = useState([]);
   const [items, setItems] = useState(initialItems);
   const [itemToRemove, setItemToRemove] = useState(null);
+  const [loadingRedeem, setLoadingRedeem] = useState(false)
 
-  const handleRedeemPress = (item) => {
+  async function loadData() {
+    const rewards_to_redeem = await AsyncStorage.getItem('rewards_to_redeem');
+    console.log(rewards_to_redeem)
+
+    if(rewards_to_redeem){
+      setItemsToRedeem(JSON.parse(rewards_to_redeem))
+    }
+  }
+  useEffect(() => {
+    loadData()
+  }, [itemsToRedeem]);
+
+  const handleRedeemPress = async (item) => {
+    console.log(item)
+    setLoadingRedeem(true);
     setShowModal(true);
+    try {
+      const awardsData = await axios.get(
+          `${BaseUrl}/api/generate_rewards?querytype=award&award=${item?.id}`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+      );
+
+      if(awardsData?.data.length > 0){
+        const availableRewards =await awardsData.data?.filter((data) => data?.code_used_state !== true)
+        if (availableRewards.length > 0){
+          const count = availableRewards.length;
+          const randomIndex = Math.floor(Math.random() * count);
+          const awardChosen = availableRewards[randomIndex];
+
+          const response = await axios.get(
+              `${BaseUrl}/api/generate_rewards?querytype=use_award&id=${awardChosen?.id}`,
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              }
+          );
+
+          if (response?.data.success){
+            const rewards_to_redeem_after_removal = itemsToRedeem.filter((itemrd) => itemrd.id !== item.id);
+            await AsyncStorage.setItem('rewards_to_redeem', JSON.stringify(rewards_to_redeem_after_removal));
+            loadData();
+            Alert.alert('This code will disappear once you press OK', `Your code is ${response?.data?.award_code}`, [
+              {
+                text: 'OK',
+                onPress: () => {
+                  // Update the state to remove the redeemed item
+                  // setItems(updatedItems);
+                  setItemToRemove(null);
+                  handleCloseModal();
+                },
+              },
+            ]);
+          }else {
+            alert("Something went wrong try again later!")
+          }
+        }else {
+          alert("Sadly your order is not available yet!!!")
+        }
+      }else {
+        alert("Sadly your order is not available yet!!!")
+      }
+    }catch (e) {
+      alert(`Error ${e.message}`)
+    }
+
+
     setItemToRemove(item);
   };
 
@@ -89,7 +163,7 @@ const Rewards = () => {
     if (itemToRemove !== null) {
       // Filter out the redeemed item
       const updatedItems = items.filter((item) => item !== itemToRemove);
-  
+
       // An alert message displaying the one-time reward code
       Alert.alert('This code will disappear once you press OK', 'Your code is 123456', [
         {
@@ -104,16 +178,18 @@ const Rewards = () => {
       ]);
     }
   };
-  
+
+
+
 
   return (
     <SafeAreaView style={[globalStyles.container, styles.container]}>
       <Text style={globalStyles.title}>Redeem Rewards</Text>
-      {items.length === 0 ? (
+      {itemsToRedeem.length === 0 ? (
         <Text style={styles.noRewardsText}>You are out of rewards. Get new rewards from your preferred restaurant. </Text>
       ) : (
-        items.map((item) => (
-          <RewardItem key={item.title} item={item} onPress={handleRedeemPress} />
+          itemsToRedeem.map((item,index) => (
+          <RewardItem key={`${item.id}-${index}`} item={item} onPress={handleRedeemPress} />
         ))
       )}
       <Modal visible={showModal} animationType="slide" transparent={true}>
