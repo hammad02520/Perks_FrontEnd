@@ -13,62 +13,6 @@ import axios from "axios";
 import {BaseUrl} from "../api/BaseUrl";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const RewardCard = ({ title, points, imageSource, key }) => {
-
-  const handleGetReward = async () => {
-      const rewards_to_redeem = await AsyncStorage.getItem('rewards_to_redeem');
-
-      if (rewards_to_redeem){
-          const rewards_array = JSON.parse(rewards_to_redeem)
-          rewards_array.push({
-              id:key,
-              name:title,
-              image:imageSource,
-              points:points
-          })
-      }else {
-          let rewards = []
-
-          rewards.push({
-              id:key,
-              name:title,
-              image:imageSource,
-              points:points
-          })
-
-          await AsyncStorage.setItem('rewards_to_redeem', JSON.stringify(rewards));
-      }
-
-    // Show an alert when the "GET" button is pressed
-    Alert.alert(
-      'Reward Purchased',
-      'You just purchased this product. Now go to the redeem page.',
-      [
-        {
-          text: 'OK',
-          onPress: () => {
-            // The user has acknowledged the alert
-          },
-        },
-      ],
-      { cancelable: true }
-    );
-  };
-
-  return (
-    <View style={globalStyles.rewardContainer} key={key}>
-      <Image style={globalStyles.rewardImg} source={{uri:imageSource}} />
-      <View style={globalStyles.rewardInfo}>
-        <Text style={globalStyles.rewardCard}>{title}</Text>
-        <Text style={globalStyles.pointsCard}>Points: {points}</Text>
-      </View>
-      <TouchableOpacity style={globalStyles.getAndRedeemButton} onPress={handleGetReward}>
-        <Text style={globalStyles.getAndRedeemReward}>Get</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
-
 const Vendor = (props) => {
   const navigation = useNavigation();
     const {currentUser} = usePerksContext();
@@ -76,38 +20,102 @@ const Vendor = (props) => {
     const [restaurantAwards, setRestaurantAwards] = useState([]);
     const {restraurant, restId} = props.route.params;
 
+    async function userRstDataLoad (){
+        const response = await axios.get(
+            `${BaseUrl}/api/user-restraurant?userId=${currentUser.id}`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
+
+
+        const awardsData = await axios.get(
+            `${BaseUrl}/api/award?restraurantId=${restId}`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
+        setRestaurantAwards(awardsData.data)
+        const restaurants = response.data
+        console.log(awardsData.data)
+
+        const data = restaurants.find((rst) => rst.restraurant.id === restId);
+        console.log(data)
+        setUserResturantData(data)
+    }
     useEffect(() => {
-        async function userRstDataLoad (){
-            const response = await axios.get(
-                `${BaseUrl}/api/user-restraurant?userId=${currentUser.id}`,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }
-            );
-
-
-            const awardsData = await axios.get(
-                `${BaseUrl}/api/award?restraurantId=${restId}`,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }
-            );
-            setRestaurantAwards(awardsData.data)
-            const restaurants = response.data
-            console.log(awardsData.data)
-
-            const data = restaurants.find((rst) => rst.restraurant.id === restId);
-            console.log(data)
-            setUserResturantData(data)
-        }
         userRstDataLoad()
     }, []);
 
     console.log(userResturantData);
+
+    const RewardCard = ({ title, points, imageSource, id, rest }) => {
+
+        const handleGetReward = async () => {
+            console.log(id)
+            console.log(rest)
+
+            const rewards_to_redeem = await AsyncStorage.getItem('rewards_to_redeem');
+
+            if (rewards_to_redeem){
+                const rewards_array = JSON.parse(rewards_to_redeem)
+                rewards_array.push({
+                    id:id,
+                    name:title,
+                    image:imageSource,
+                    points:points,
+                    redeemed: false,
+                    restaurant:rest
+                })
+                await AsyncStorage.setItem('rewards_to_redeem', JSON.stringify(rewards_array));
+            }else {
+                let rewards = []
+
+                rewards.push({
+                    id:id,
+                    name:title,
+                    image:imageSource,
+                    points:points,
+                    redeemed: false,
+                    restaurant:rest
+                })
+
+                await AsyncStorage.setItem('rewards_to_redeem', JSON.stringify(rewards));
+            }
+
+            // Show an alert when the "GET" button is pressed
+            Alert.alert(
+                'Reward Purchased',
+                'You just purchased this product. Now go to the redeem page.',
+                [
+                    {
+                        text: 'OK',
+                        onPress: () => {
+                            // The user has acknowledged the alert
+                        },
+                    },
+                ],
+                { cancelable: true }
+            );
+        };
+
+        return (
+            <View style={globalStyles.rewardContainer} key={id}>
+                <Image style={globalStyles.rewardImg} source={{uri:imageSource}} />
+                <View style={globalStyles.rewardInfo}>
+                    <Text style={globalStyles.rewardCard}>{title}</Text>
+                    <Text style={globalStyles.pointsCard}>Points: {points}</Text>
+                </View>
+                <TouchableOpacity style={globalStyles.getAndRedeemButton} onPress={handleGetReward}>
+                    <Text style={globalStyles.getAndRedeemReward}>Get</Text>
+                </TouchableOpacity>
+            </View>
+        );
+    };
 
   return (
     <SafeAreaView style={[globalStyles.container, styles.container]}>
@@ -135,7 +143,12 @@ const Vendor = (props) => {
       <ScrollView style={styles.scrollcontainer}>
           {restaurantAwards?.length > 0
               ? restaurantAwards.map((award) => {
-                  return <RewardCard title={award?.product} points={award?.points} imageSource={BaseUrl+award?.pic}  key={award?.id}/>
+                  return <RewardCard title={award?.product} points={award?.points} imageSource={BaseUrl+award?.pic}  key={award?.id} id={award?.id} rest={
+                      {rst_name: restraurant,
+                       user_id: currentUser.id,
+                      rest_id: restId,
+                      }
+                  }/>
               } )
               : <Text style={[styles.restaurantname, {color:"black"}]}>No Awards Yet!!!</Text>}
 
