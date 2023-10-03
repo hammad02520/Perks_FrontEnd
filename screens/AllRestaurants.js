@@ -26,7 +26,6 @@ const AllRestaurants = () => {
                 }
             );
             const data = response.data
-            console.log(data)
             setRestaurantss(data)
         }catch (e) {
             alert(`Error ${e.message}`)
@@ -86,7 +85,7 @@ const AllRestaurants = () => {
       <Image
         resizeMode="contain"
         style={styles.restaurantImage}
-        source={restaurant?.restraurant?.pic}
+        source={{uri:BaseUrl+restaurant?.restraurant?.pic}}
       />
       <View style={styles.restaurantInfo}>
         <Text style={styles.restaurantname}>{restaurant?.restraurant.name}</Text>
