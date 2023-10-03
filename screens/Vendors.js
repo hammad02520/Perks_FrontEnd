@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { View, Text, Image, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { logoSvgCode } from './Welcome'; // Adjust the path to match your file structure
 import { SvgXml } from 'react-native-svg';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -45,7 +45,6 @@ const Vendor = (props) => {
 {/* title depending on whether the user wants to see their restaurants or nearby restaurants */}
       <Text style={styles.titleText} >All your restaurants</Text>
       {/* or 'Restaurants near you' */}
-        <ScrollView>
             {restaurants?.length > 0 ? (
                 restaurants?.map((item) => {
                     return   <TouchableOpacity
@@ -71,9 +70,6 @@ const Vendor = (props) => {
             ) : (
                 <Text style={[styles.restaurantname, {color:"black"}]}>No Restaurants</Text>
             )}
-        </ScrollView>
-
-
 
 {/* restaurants pulled from database depending on request */}
 {/*    <TouchableOpacity*/}
