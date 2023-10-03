@@ -80,7 +80,19 @@ const Rewards = () => {
   const [items, setItems] = useState(initialItems);
   const [itemToRemove, setItemToRemove] = useState(null);
   const [loadingRedeem, setLoadingRedeem] = useState(false)
-  // /api/generate_rewards?querytype=use_award&id=f1407d25-2692-4aa2-b482-82e97e8fe2fa
+
+  async function loadData() {
+    const rewards_to_redeem = await AsyncStorage.getItem('rewards_to_redeem');
+    console.log(rewards_to_redeem)
+
+    if(rewards_to_redeem){
+      setItemsToRedeem(JSON.parse(rewards_to_redeem))
+    }
+  }
+  useEffect(() => {
+    loadData()
+  }, [itemsToRedeem]);
+
   const handleRedeemPress = async (item) => {
     console.log(item)
     setLoadingRedeem(true);
@@ -94,7 +106,7 @@ const Rewards = () => {
             },
           }
       );
-      console.log(awardsData.data)
+
       if(awardsData?.data.length > 0){
         const availableRewards =await awardsData.data?.filter((data) => data?.code_used_state !== true)
         if (availableRewards.length > 0){
@@ -110,7 +122,11 @@ const Rewards = () => {
                 },
               }
           );
+
           if (response?.data.success){
+            const rewards_to_redeem_after_removal = itemsToRedeem.filter((itemrd) => itemrd.id !== item.id);
+            await AsyncStorage.setItem('rewards_to_redeem', JSON.stringify(rewards_to_redeem_after_removal));
+            loadData();
             Alert.alert('This code will disappear once you press OK', `Your code is ${response?.data?.award_code}`, [
               {
                 text: 'OK',
@@ -163,16 +179,7 @@ const Rewards = () => {
     }
   };
 
-  useEffect(() => {
-   async function loadData() {
-     const rewards_to_redeem = await AsyncStorage.getItem('rewards_to_redeem');
 
-     if(rewards_to_redeem){
-       setItemsToRedeem(JSON.parse(rewards_to_redeem))
-     }
-   }
-   loadData()
-  }, []);
 
 
   return (
@@ -181,8 +188,8 @@ const Rewards = () => {
       {itemsToRedeem.length === 0 ? (
         <Text style={styles.noRewardsText}>You are out of rewards. Get new rewards from your preferred restaurant. </Text>
       ) : (
-          itemsToRedeem.map((item) => (
-          <RewardItem key={item.id} item={item} onPress={handleRedeemPress} />
+          itemsToRedeem.map((item,index) => (
+          <RewardItem key={`${item.id}-${index}`} item={item} onPress={handleRedeemPress} />
         ))
       )}
       <Modal visible={showModal} animationType="slide" transparent={true}>

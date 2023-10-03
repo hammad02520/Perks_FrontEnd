@@ -14,11 +14,12 @@ import {BaseUrl} from "../api/BaseUrl";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Vendor = (props) => {
-  const navigation = useNavigation();
+    const navigation = useNavigation();
     const {currentUser} = usePerksContext();
     const [userResturantData, setUserResturantData] = useState();
     const [restaurantAwards, setRestaurantAwards] = useState([]);
     const {restraurant, restId} = props.route.params;
+
 
     async function userRstDataLoad (){
         const response = await axios.get(
@@ -29,7 +30,6 @@ const Vendor = (props) => {
                 },
             }
         );
-
 
         const awardsData = await axios.get(
             `${BaseUrl}/api/award?restraurantId=${restId}`,
@@ -47,60 +47,93 @@ const Vendor = (props) => {
         console.log(data)
         setUserResturantData(data)
     }
+
+
     useEffect(() => {
         userRstDataLoad()
     }, []);
 
-    console.log(userResturantData);
+
 
     const RewardCard = ({ title, points, imageSource, id, rest }) => {
 
         const handleGetReward = async () => {
             console.log(id)
             console.log(rest)
+            if (points <= userResturantData?.total_points ){
+                const response = await axios.post(`${BaseUrl}/api/use_points`, {
+                        user: currentUser.id,
+                        award: id,
+                        point_used:points,
+                        restaurant_id:restId
+                    },
+                    {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
 
-            const rewards_to_redeem = await AsyncStorage.getItem('rewards_to_redeem');
+                    });
+                console.log(response.data)
+                if (response.data.save){
+                    const rewards_to_redeem = await AsyncStorage.getItem('rewards_to_redeem');
 
-            if (rewards_to_redeem){
-                const rewards_array = JSON.parse(rewards_to_redeem)
-                rewards_array.push({
-                    id:id,
-                    name:title,
-                    image:imageSource,
-                    points:points,
-                    redeemed: false,
-                    restaurant:rest
-                })
-                await AsyncStorage.setItem('rewards_to_redeem', JSON.stringify(rewards_array));
+                    if (rewards_to_redeem){
+                        const rewards_array = JSON.parse(rewards_to_redeem)
+                        rewards_array.push({
+                            id:id,
+                            name:title,
+                            image:imageSource,
+                            points:points,
+                            redeemed: false,
+                            restaurant:rest
+                        })
+                        await AsyncStorage.setItem('rewards_to_redeem', JSON.stringify(rewards_array));
+                    }else {
+                        let rewards = []
+
+                        rewards.push({
+                            id:id,
+                            name:title,
+                            image:imageSource,
+                            points:points,
+                            redeemed: false,
+                            restaurant:rest
+                        })
+
+                        await AsyncStorage.setItem('rewards_to_redeem', JSON.stringify(rewards));
+                    }
+                    userRstDataLoad()
+                    // Show an alert when the "GET" button is pressed
+                    Alert.alert(
+                        'Reward Purchased',
+                        'You just purchased this product. Now go to the redeem page.',
+                        [
+                            {
+                                text: 'OK',
+                                onPress: () => {
+                                    // The user has acknowledged the alert
+                                },
+                            },
+                        ],
+                        { cancelable: true }
+                    );
+                }
             }else {
-                let rewards = []
-
-                rewards.push({
-                    id:id,
-                    name:title,
-                    image:imageSource,
-                    points:points,
-                    redeemed: false,
-                    restaurant:rest
-                })
-
-                await AsyncStorage.setItem('rewards_to_redeem', JSON.stringify(rewards));
+                Alert.alert(
+                    'Reward Purchased',
+                    'Ooops!! You dont have enough points.',
+                    [
+                        {
+                            text: 'OK',
+                            onPress: () => {
+                                // The user has acknowledged the alert
+                            },
+                        },
+                    ],
+                    { cancelable: true }
+                );
             }
 
-            // Show an alert when the "GET" button is pressed
-            Alert.alert(
-                'Reward Purchased',
-                'You just purchased this product. Now go to the redeem page.',
-                [
-                    {
-                        text: 'OK',
-                        onPress: () => {
-                            // The user has acknowledged the alert
-                        },
-                    },
-                ],
-                { cancelable: true }
-            );
         };
 
         return (
@@ -116,6 +149,7 @@ const Vendor = (props) => {
             </View>
         );
     };
+
 
   return (
     <SafeAreaView style={[globalStyles.container, styles.container]}>
