@@ -12,10 +12,12 @@ import {BaseUrl} from "../api/BaseUrl";
 const AllRestaurants = () => {
   const navigation = useNavigation();
     const [restaurantss, setRestaurantss] = useState();
+    const [loadingData, setLoadingData] = useState(false);
     const {currentUser} = usePerksContext();
 
     useEffect(() => {
         async function loadRestaurants() {
+            setLoadingData(true);
         try{
             const response = await axios.get(
                 `${BaseUrl}/api/user-restraurant?userId=${currentUser?.id}`,
@@ -26,9 +28,12 @@ const AllRestaurants = () => {
                 }
             );
             const data = response.data
+            console.log(response)
             setRestaurantss(data)
+            setLoadingData(false);
         }catch (e) {
             alert(`Error ${e.message}`)
+            setLoadingData(false);
         }
         }
 
@@ -117,9 +122,10 @@ const AllRestaurants = () => {
                 inputStyle={{ color: '#333'}}
                 // , marginVertical: 100
               />
-              {modalFilteredRestaurants.length > 0
-                ? modalFilteredRestaurants.map(renderRestaurant)
-                : restaurantss?.map(renderRestaurant)}
+                {loadingData? <Text>loading..</Text>: modalFilteredRestaurants?.length > 0
+                        ? modalFilteredRestaurants.map(renderRestaurant)
+                        : restaurantss?.map(renderRestaurant)
+                }
             </ScrollView>
     </SafeAreaView>
   );
