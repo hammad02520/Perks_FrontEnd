@@ -18,34 +18,42 @@ const Vendor = (props) => {
     const {currentUser} = usePerksContext();
     const [userResturantData, setUserResturantData] = useState();
     const [restaurantAwards, setRestaurantAwards] = useState([]);
+    const [loadingData, setLoadingData] = useState(false);
     const {restraurant, restId} = props.route.params;
 
 
     async function userRstDataLoad (){
-        const response = await axios.get(
-            `${BaseUrl}/api/user-restraurant?userId=${currentUser.id}`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            }
-        );
+        setLoadingData(false)
+     try {
+         const response = await axios.get(
+                 `${BaseUrl}/api/user-restraurant?userId=${currentUser.id}`,
+             {
+                 headers: {
+                     'Content-Type': 'application/json',
+                 },
+             }
+         );
 
-        const awardsData = await axios.get(
-            `${BaseUrl}/api/award?restraurantId=${restId}`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            }
-        );
-        setRestaurantAwards(awardsData.data)
-        const restaurants = response.data
-        console.log(awardsData.data)
+         const awardsData = await axios.get(
+             `${BaseUrl}/api/award?restraurantId=${restId}`,
+             {
+                 headers: {
+                     'Content-Type': 'application/json',
+                 },
+             }
+         );
+         setRestaurantAwards(awardsData.data)
+         const restaurants = response.data
+         console.log(awardsData.data)
 
-        const data = restaurants.find((rst) => rst.restraurant.id === restId);
-        console.log(data)
-        setUserResturantData(data)
+         const data = restaurants.find((rst) => rst.restraurant.id === restId);
+         console.log(data)
+         setUserResturantData(data)
+         setLoadingData(false)
+     }catch (e) {
+         alert(`error ${e.message}`)
+         setLoadingData(false)
+     }
     }
 
 
@@ -161,7 +169,7 @@ const Vendor = (props) => {
             <Text style={globalStyles.restaurantName}>{userResturantData?.restraurant.name}</Text>
             <Text style={globalStyles.points}>{userResturantData?.total_points}pts</Text>
             <Text style={globalStyles.remainingPoints}>1900pts till you can get a free drink</Text>
-            <Text style={globalStyles.userName}>Hassan</Text>
+            <Text style={globalStyles.userName}>{currentUser?.fname} {currentUser?.lname}</Text>
           </View>
           <View style={styles.progressBarContainer}>
             <ProgressBar
@@ -175,12 +183,12 @@ const Vendor = (props) => {
       </View>
         <Text style={globalStyles.leftTitle}>Available rewards</Text>
       <ScrollView style={styles.scrollcontainer}>
-          {restaurantAwards?.length > 0
+          {loadingData? <Text>Loading...</Text>:  restaurantAwards?.length > 0
               ? restaurantAwards.map((award) => {
                   return <RewardCard title={award?.product} points={award?.points} imageSource={BaseUrl+award?.pic}  key={award?.id} id={award?.id} rest={
                       {rst_name: restraurant,
-                       user_id: currentUser.id,
-                      rest_id: restId,
+                          user_id: currentUser.id,
+                          rest_id: restId,
                       }
                   }/>
               } )

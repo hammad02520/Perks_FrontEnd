@@ -20,6 +20,8 @@ import * as Location from "expo-location";
 import styles from "../screenstyles/homeStyles"; // Import styles from the separate file
 import { ScrollView } from "react-native-gesture-handler";
 import {usePerksContext} from "../context";
+import axios from "axios";
+import {BaseUrl} from "../api/BaseUrl";
 
 export default function Home(props) {
   const navigation = useNavigation();
@@ -28,10 +30,37 @@ export default function Home(props) {
   const [recommendationText, setRecommendationText] = useState("");
   const [locationText, setLocationText] = useState("Your location");
   const [userLocation, setUserLocation] = useState(null);
+  const [userRestaurantData, setUserRestaurantData] = useState([]);
+  const [loadingData, setLoadingData] = useState(false);
   const {currentUser} = usePerksContext()
 
   console.log(currentUser)
 
+  useEffect(() => {
+    async function loadRestaurants() {
+      setLoadingData(true)
+      try{
+        const response = await axios.get(
+            `${BaseUrl}/api/user-restraurant?userId=${currentUser?.id}`,
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+        );
+        const data = response.data
+        console.log(response)
+        setUserRestaurantData(data)
+        setLoadingData(false)
+      }catch (e) {
+        alert(`Error ${e.message}`)
+        setLoadingData(false)
+      }
+    }
+
+    loadRestaurants();
+
+  }, [currentUser]);
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
     // Reset locationText when the modal is closed
@@ -105,11 +134,12 @@ export default function Home(props) {
                         >
                         <SvgXml xml={profile} style={styles.logoImage} />
                     </TouchableOpacity> */}
-          <Text style={styles.totalPoints}>1500</Text>
+          {loadingData? <Text style={styles.totalPointsText}>loading...</Text>: <Text style={styles.totalPoints}>{userRestaurantData[0]?.user?.total_points_made}</Text>}
           <Text style={styles.totalPointsText}> Total Perks Points </Text>
         </ImageBackground>
       </View>
 
+      {/*//use the restaurants from the server in userRestaurantData*/}
       {/* User's restaurants */}
       <View style={styles.title}>
         <Text style={styles.titleText}>Your Restaurants</Text>
@@ -203,70 +233,39 @@ export default function Home(props) {
       </View>
 
       <View style={styles.specialAlign}>
-        <TouchableOpacity
-          style={styles.openButton}
-          activeOpacity={0.5}
-          onPress={() => {
-            navigation.navigate("SpecificVendorStack", {
-              screen: "SpecificVendor",
-            });
-          }}
-        >
-          <View style={styles.cardContainerCrave}>
-            <Image
-              resizeMode="contain"
-              style={styles.craveImg}
-              source={require("../assets/images/crave.jpg")}
-            />
-            <View>
-              <Text style={styles.restaurantname}>Crave</Text>
-              <Text style={styles.pointsCard}>points: 0</Text>
-            </View>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.openButton}
-          activeOpacity={0.5}
-          onPress={() => {
-            navigation.navigate("SpecificVendorStack", {
-              screen: "SpecificVendor",
-            });
-          }}
-        >
-          <View style={styles.cardContainerShawarma}>
-            <Image
-              resizeMode="contain"
-              style={styles.shawarmaImg}
-              source={require("../assets/images/shawarma.jpg")}
-            />
-            <View>
-              <Text style={styles.restaurantname}>Shawarma 27</Text>
-              <Text style={styles.pointsCard}>points: 100</Text>
-            </View>
-          </View>
-        </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.openButton}
-          activeOpacity={0.5}
-          onPress={() => {
-            navigation.navigate("SpecificVendorStack", {
-              screen: "SpecificVendor",
-            });
-          }}
-        >
-          <View style={styles.cardContainerShishi}>
-            <Image
-              resizeMode="contain"
-              style={styles.shishiImg}
-              source={require("../assets/images/shishi.jpg")}
-            />
-            <View>
-              <Text style={styles.restaurantname}>Shishi</Text>
-              <Text style={styles.pointsCard}>points: 200</Text>
-            </View>
-          </View>
-        </TouchableOpacity>
+        {userRestaurantData?.length > 0 ? (
+            userRestaurantData?.slice(0,3).map((item) => {
+              return   <TouchableOpacity
+                  key={item?.id}
+                  style={styles.openButton}
+                  activeOpacity={0.5}
+                  onPress={() => {
+                    navigation.navigate('SpecificVendorStack', { screen: 'SpecificVendor',
+                      params: {
+                        restraurant: item?.restraurant.name,
+                        restId: item?.restraurant.id,
+                      }
+                    });
+                  }}
+              >
+                <View style={styles.cardContainerCrave}>
+                  <Image
+                      resizeMode="contain"
+                      style={styles.shishiImg}
+                      source={{uri:BaseUrl+item?.restraurant?.pic}}
+                  />
+                  <View>
+                    <Text style={styles.restaurantname}>{item?.restraurant.name}</Text>
+                    <Text style={styles.pointsCard}>points: {item?.total_points}</Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            })
+        ) : (
+            <Text style={[styles.restaurantname, {color:"black"}]}>No Restaurants</Text>
+        )}
+
       </View>
 
       {/* for the restaurant recommendations */}

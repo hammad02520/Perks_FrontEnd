@@ -14,11 +14,13 @@ import {BaseUrl} from "../api/BaseUrl";
 const Vendor = (props) => {
   const navigation = useNavigation();
     const [restaurants, setRestaurants] = useState();
+    const [loadingData, setLoadingData] = useState(false);
     const {currentUser} = usePerksContext();
 
     useEffect(() => {
         console.log("-------------------------------------------------")
         async function loadRestaurants() {
+            setLoadingData(true)
             try{
                 const response = await axios.get(
                     `${BaseUrl}/api/user-restraurant?userId=${currentUser?.id}`,
@@ -31,12 +33,14 @@ const Vendor = (props) => {
                 const data = response.data
                 console.log(data)
                 setRestaurants(data)
+                setLoadingData(false)
             }catch (e) {
                 alert(`Error ${e.message}`)
+                setLoadingData(false)
             }
         }
         loadRestaurants()
-    }, []);
+    }, [currentUser]);
 
 
   return (
@@ -45,31 +49,31 @@ const Vendor = (props) => {
 {/* title depending on whether the user wants to see their restaurants or nearby restaurants */}
       <Text style={styles.titleText} >All your restaurants</Text>
       {/* or 'Restaurants near you' */}
-            {restaurants?.length > 0 ? (
-                restaurants?.map((item) => {
-                    return   <TouchableOpacity
-                        key={item?.id}
-                        style={styles.openButton}
-                        activeOpacity={0.5}
-                        onPress={() => {
-                            navigation.navigate('SpecificVendorStack', { screen: 'SpecificVendor',
-                                params: {
-                                    restraurant: item?.restraurant.name,
-                                    restId: item?.restraurant.id,
-                                }
-                            });
-                        }}
-                    >
-                        <Image resizeMode="stretch" style={styles.shawarmaImg} source={{uri:BaseUrl+item?.restraurant?.pic}}/>
-                        <View style={styles.restaurantInfo}>
-                            <Text style={styles.restaurantname}>{item?.restraurant.name}</Text>
-                            <Text style={styles.pointsCard}>points: {item?.total_points}</Text>
-                        </View>
-                    </TouchableOpacity>
-                })
-            ) : (
-                <Text style={[styles.restaurantname, {color:"black"}]}>No Restaurants</Text>
-            )}
+        {loadingData? <Text>Loading....</Text>:  restaurants?.length > 0 ? (
+            restaurants?.map((item) => {
+                return   <TouchableOpacity
+                    key={item?.id}
+                    style={styles.openButton}
+                    activeOpacity={0.5}
+                    onPress={() => {
+                        navigation.navigate('SpecificVendorStack', { screen: 'SpecificVendor',
+                            params: {
+                                restraurant: item?.restraurant.name,
+                                restId: item?.restraurant.id,
+                            }
+                        });
+                    }}
+                >
+                    <Image resizeMode="stretch" style={styles.shawarmaImg} source={{uri:BaseUrl+item?.restraurant?.pic}}/>
+                    <View style={styles.restaurantInfo}>
+                        <Text style={styles.restaurantname}>{item?.restraurant.name}</Text>
+                        <Text style={styles.pointsCard}>points: {item?.total_points}</Text>
+                    </View>
+                </TouchableOpacity>
+            })
+        ) : (
+            <Text style={[styles.restaurantname, {color:"black"}]}>No Restaurants</Text>
+        )}
 
 {/* restaurants pulled from database depending on request */}
 {/*    <TouchableOpacity*/}
