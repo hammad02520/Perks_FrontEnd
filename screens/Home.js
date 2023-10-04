@@ -233,70 +233,39 @@ export default function Home(props) {
       </View>
 
       <View style={styles.specialAlign}>
-        <TouchableOpacity
-          style={styles.openButton}
-          activeOpacity={0.5}
-          onPress={() => {
-            navigation.navigate("SpecificVendorStack", {
-              screen: "SpecificVendor",
-            });
-          }}
-        >
-          <View style={styles.cardContainerCrave}>
-            <Image
-              resizeMode="contain"
-              style={styles.craveImg}
-              source={require("../assets/images/crave.jpg")}
-            />
-            <View>
-              <Text style={styles.restaurantname}>Crave</Text>
-              <Text style={styles.pointsCard}>points: 0</Text>
-            </View>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.openButton}
-          activeOpacity={0.5}
-          onPress={() => {
-            navigation.navigate("SpecificVendorStack", {
-              screen: "SpecificVendor",
-            });
-          }}
-        >
-          <View style={styles.cardContainerShawarma}>
-            <Image
-              resizeMode="contain"
-              style={styles.shawarmaImg}
-              source={require("../assets/images/shawarma.jpg")}
-            />
-            <View>
-              <Text style={styles.restaurantname}>Shawarma 27</Text>
-              <Text style={styles.pointsCard}>points: 100</Text>
-            </View>
-          </View>
-        </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.openButton}
-          activeOpacity={0.5}
-          onPress={() => {
-            navigation.navigate("SpecificVendorStack", {
-              screen: "SpecificVendor",
-            });
-          }}
-        >
-          <View style={styles.cardContainerShishi}>
-            <Image
-              resizeMode="contain"
-              style={styles.shishiImg}
-              source={require("../assets/images/shishi.jpg")}
-            />
-            <View>
-              <Text style={styles.restaurantname}>Shishi</Text>
-              <Text style={styles.pointsCard}>points: 200</Text>
-            </View>
-          </View>
-        </TouchableOpacity>
+        {userRestaurantData?.length > 0 ? (
+            userRestaurantData?.slice(0,3).map((item) => {
+              return   <TouchableOpacity
+                  key={item?.id}
+                  style={styles.openButton}
+                  activeOpacity={0.5}
+                  onPress={() => {
+                    navigation.navigate('SpecificVendorStack', { screen: 'SpecificVendor',
+                      params: {
+                        restraurant: item?.restraurant.name,
+                        restId: item?.restraurant.id,
+                      }
+                    });
+                  }}
+              >
+                <View style={styles.cardContainerCrave}>
+                  <Image
+                      resizeMode="contain"
+                      style={styles.shishiImg}
+                      source={{uri:BaseUrl+item?.restraurant?.pic}}
+                  />
+                  <View>
+                    <Text style={styles.restaurantname}>{item?.restraurant.name}</Text>
+                    <Text style={styles.pointsCard}>points: {item?.total_points}</Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            })
+        ) : (
+            <Text style={[styles.restaurantname, {color:"black"}]}>No Restaurants</Text>
+        )}
+
       </View>
 
       {/* for the restaurant recommendations */}
