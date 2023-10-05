@@ -11,7 +11,7 @@ const commonRectangleStyles = {
     alignItems: 'center',
     paddingHorizontal: 10,
   };
-  
+
   const styles = StyleSheet.create({
     container: {
       justifyContent: 'flex-start',
@@ -83,6 +83,21 @@ const commonRectangleStyles = {
     modalButtonText: {
       fontSize: 16,
       fontWeight: '500',
+    },
+
+    recommendButton: {
+      flexDirection: "row",
+      justifyContent: "space-evenly",
+      alignItems: "center",
+      width: "65%",
+      height: "4.5%",
+      backgroundColor: "#1A6F9E",
+      borderRadius: 10,
+      marginTop: "7%",
+    },
+    recommendText: {
+      color: "white",
+      fontSize: 13,
     },
   });
 

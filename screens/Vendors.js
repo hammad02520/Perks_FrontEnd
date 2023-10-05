@@ -15,10 +15,9 @@ const Vendor = (props) => {
   const navigation = useNavigation();
     const [restaurants, setRestaurants] = useState();
     const [loadingData, setLoadingData] = useState(false);
-    const {currentUser} = usePerksContext();
+    const {currentUser, userPointsUpdated} = usePerksContext();
 
     useEffect(() => {
-        console.log("-------------------------------------------------")
         async function loadRestaurants() {
             setLoadingData(true)
             try{
@@ -31,7 +30,6 @@ const Vendor = (props) => {
                     }
                 );
                 const data = response.data
-                console.log(data)
                 setRestaurants(data)
                 setLoadingData(false)
             }catch (e) {
@@ -40,7 +38,7 @@ const Vendor = (props) => {
             }
         }
         loadRestaurants()
-    }, [currentUser]);
+    }, [currentUser, userPointsUpdated]);
 
 
   return (

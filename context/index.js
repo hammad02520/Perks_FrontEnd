@@ -13,12 +13,14 @@ export const usePerksContext = () => {
 }
 
 
-
 export const PerksProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(undefined);
+    const [userPointsUpdated, setUserPointsUpdated] = useState(0);
+    const [currentRedeemedRewardId, setCurrentRedeemedRewardId] = useState();
 
     return (
-        <PerksContext.Provider value={{ currentUser, setCurrentUser }}>
+        <PerksContext.Provider value={{ currentUser, setCurrentUser, userPointsUpdated, setUserPointsUpdated,
+            setCurrentRedeemedRewardId, currentRedeemedRewardId }}>
             {children}
         </PerksContext.Provider>
     );
