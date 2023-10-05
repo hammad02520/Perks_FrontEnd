@@ -16,6 +16,7 @@ import styles from '../screenstyles/rewardStyles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 import {BaseUrl} from "../api/BaseUrl";
+import {usePerksContext} from "../context";
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -79,10 +80,26 @@ const Rewards = () => {
   const [itemsToRedeem, setItemsToRedeem] = useState([]);
   const [items, setItems] = useState(initialItems);
   const [itemToRemove, setItemToRemove] = useState(null);
-  const [loadingRedeem, setLoadingRedeem] = useState(false)
+  const [loadingRedeem, setLoadingRedeem] = useState(false);
+  const [redeemedRewards, setRedeemedRewards] = useState()
+  const {currentUser, userPointsUpdated} = usePerksContext()
 
   async function loadData() {
     const rewards_to_redeem = await AsyncStorage.getItem('rewards_to_redeem');
+    try {
+      const user_redeemed_rewards = await axios.get(
+          `${BaseUrl}/api/generate_rewards?querytype=user_redeemed_rewards&user=${currentUser.id}`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+      );
+      setRedeemedRewards(user_redeemed_rewards.data)
+      console.log(user_redeemed_rewards.data)
+    }catch (e) {
+
+    }
 
     if(rewards_to_redeem){
       setItemsToRedeem(JSON.parse(rewards_to_redeem))
@@ -91,6 +108,7 @@ const Rewards = () => {
   useEffect(() => {
     loadData()
   }, [itemsToRedeem]);
+
 
   const handleRedeemPress = async (item) => {
     setLoadingRedeem(true);
@@ -113,7 +131,7 @@ const Rewards = () => {
           const awardChosen = availableRewards[randomIndex];
 
           const response = await axios.get(
-              `${BaseUrl}/api/generate_rewards?querytype=use_award&id=${awardChosen?.id}`,
+              `${BaseUrl}/api/generate_rewards?querytype=use_award&id=${awardChosen?.id}&user=${currentUser.id}`,
               {
                 headers: {
                   'Content-Type': 'application/json',

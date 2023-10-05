@@ -31,8 +31,9 @@ export default function Home(props) {
   const [locationText, setLocationText] = useState("Your location");
   const [userLocation, setUserLocation] = useState(null);
   const [userRestaurantData, setUserRestaurantData] = useState([]);
+  const [visitedRestaurants, setVisitedRestaurants] = useState();
   const [loadingData, setLoadingData] = useState(false);
-  const {currentUser} = usePerksContext()
+  const {currentUser, userPointsUpdated} = usePerksContext()
 
   console.log(currentUser)
 
@@ -50,6 +51,8 @@ export default function Home(props) {
         );
         const data = response.data
         console.log(response)
+        const restVisited =await data.data?.filter((data) => data?.total_points !== 0)
+        setVisitedRestaurants(restVisited)
         setUserRestaurantData(data)
         setLoadingData(false)
       }catch (e) {
@@ -60,7 +63,7 @@ export default function Home(props) {
 
     loadRestaurants();
 
-  }, [currentUser]);
+  }, [currentUser, userPointsUpdated]);
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
     // Reset locationText when the modal is closed
@@ -153,27 +156,38 @@ export default function Home(props) {
       </View>
 
       <View style={styles.specialAlign}>
-        <TouchableOpacity
-          style={styles.openButton}
-          activeOpacity={0.5}
-          onPress={() => {
-            navigation.navigate("SpecificVendorStack", {
-              screen: "SpecificVendor",
-            });
-          }}
-        >
-          <View style={styles.cardContainerShawarma}>
-            <Image
-              resizeMode="contain"
-              style={styles.shawarmaImg}
-              source={require("../assets/images/shawarma.jpg")}
-            />
-            <View>
-              <Text style={styles.restaurantname}>Shawarma 27</Text>
-              <Text style={styles.pointsCard}>points: 100</Text>
-            </View>
-          </View>
-        </TouchableOpacity>
+        {visitedRestaurants?.length > 0 ? (
+            visitedRestaurants?.slice(0,3).map((item) => {
+              return   <TouchableOpacity
+                  key={item?.id}
+                  style={styles.openButton}
+                  activeOpacity={0.5}
+                  onPress={() => {
+                    navigation.navigate('SpecificVendorStack', { screen: 'SpecificVendor',
+                      params: {
+                        restraurant: item?.restraurant.name,
+                        restId: item?.restraurant.id,
+                      }
+                    });
+                  }}
+              >
+                <View style={styles.cardContainerCrave}>
+                  <Image
+                      resizeMode="contain"
+                      style={styles.shishiImg}
+                      source={{uri:BaseUrl+item?.restraurant?.pic}}
+                  />
+                  <View>
+                    <Text style={styles.restaurantname}>{item?.restraurant.name}</Text>
+                    <Text style={styles.pointsCard}>points: {item?.total_points}</Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            })
+        ) : (
+            <Text style={[styles.restaurantname, {color:"black"}]}>You haven't visited any restaurant yet</Text>
+        )}
+
 
         <TouchableOpacity
           style={styles.openButton}
