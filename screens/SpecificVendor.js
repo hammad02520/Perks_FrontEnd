@@ -15,7 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Vendor = (props) => {
     const navigation = useNavigation();
-    const {currentUser} = usePerksContext();
+    const {currentUser, setUserPointsUpdated, userPointsUpdated, setCurrentRedeemedRewardId} = usePerksContext();
     const [userResturantData, setUserResturantData] = useState();
     const [restaurantAwards, setRestaurantAwards] = useState([]);
     const [loadingData, setLoadingData] = useState(false);
@@ -44,10 +44,8 @@ const Vendor = (props) => {
          );
          setRestaurantAwards(awardsData.data)
          const restaurants = response.data
-         console.log(awardsData.data)
 
          const data = restaurants.find((rst) => rst.restraurant.id === restId);
-         console.log(data)
          setUserResturantData(data)
          setLoadingData(false)
      }catch (e) {
@@ -81,12 +79,13 @@ const Vendor = (props) => {
                         }
 
                     });
-                console.log(response.data)
+                setUserPointsUpdated(userPointsUpdated+1);
                 if (response.data.save){
                     const rewards_to_redeem = await AsyncStorage.getItem('rewards_to_redeem');
 
                     if (rewards_to_redeem){
                         const rewards_array = JSON.parse(rewards_to_redeem)
+                        setCurrentRedeemedRewardId(id);
                         rewards_array.push({
                             id:id,
                             name:title,
@@ -98,7 +97,7 @@ const Vendor = (props) => {
                         await AsyncStorage.setItem('rewards_to_redeem', JSON.stringify(rewards_array));
                     }else {
                         let rewards = []
-
+                        setCurrentRedeemedRewardId(id);
                         rewards.push({
                             id:id,
                             name:title,
@@ -125,6 +124,7 @@ const Vendor = (props) => {
                         ],
                         { cancelable: true }
                     );
+                    navigation.navigate('MainScreens', { screen: 'Rewards'});
                 }
             }else {
                 Alert.alert(

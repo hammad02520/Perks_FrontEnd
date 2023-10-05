@@ -34,7 +34,7 @@ const initialItems = [
   { title: "Free salad", description: "You only spent 900 points", redeemed: false },
 ];
 
-const RewardItem = ({ item, onPress }) => {
+const RewardItem = ({ item, onPress, currentrdId }) => {
   const containerStyle = Platform.OS === 'ios' ? styles.rectangleIOS : styles.rectangleAndroid;
   const backgroundColor = item.redeemed ? 'rgba(169, 169, 169, 0.5)' : 'white';
 
@@ -58,13 +58,20 @@ const RewardItem = ({ item, onPress }) => {
   };
 
   return (
-    <View key={item.title} style={[containerStyle, { width: windowWidth * 0.9, backgroundColor }]}>
+    <View key={item.title} style={[
+      containerStyle,
+      {
+        width: windowWidth * 0.9,
+        backgroundColor: currentrdId === item?.id ? 'gray' : 'white',
+      },
+    ]}>
       <View style={globalStyles.borderradiusforimage}>
         <Image source={{uri:item?.image}} style={globalStyles.image} />
       </View>
       <View style={styles.textContainer}>
         <Text style={styles.text}>{item.name}</Text>
         <Text style={styles.additionalText}>You only spent {item.points} points</Text>
+        <Text style={styles.additionalText}>{item.restaurant.rst_name}</Text>
       </View>
       {!item.redeemed && (
         <TouchableOpacity style={globalStyles.getAndRedeemButton} onPress={() => onPress(item)}>
@@ -82,7 +89,7 @@ const Rewards = () => {
   const [itemToRemove, setItemToRemove] = useState(null);
   const [loadingRedeem, setLoadingRedeem] = useState(false);
   const [redeemedRewards, setRedeemedRewards] = useState()
-  const {currentUser, userPointsUpdated} = usePerksContext()
+  const {currentUser, setCurrentRedeemedRewardId, currentRedeemedRewardId} = usePerksContext()
 
   async function loadData() {
     const rewards_to_redeem = await AsyncStorage.getItem('rewards_to_redeem');
@@ -96,7 +103,6 @@ const Rewards = () => {
           }
       );
       setRedeemedRewards(user_redeemed_rewards.data)
-      console.log(user_redeemed_rewards.data)
     }catch (e) {
 
     }
@@ -105,9 +111,18 @@ const Rewards = () => {
       setItemsToRedeem(JSON.parse(rewards_to_redeem))
     }
   }
+
   useEffect(() => {
     loadData()
-  }, [itemsToRedeem]);
+  }, [itemsToRedeem, currentRedeemedRewardId]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setCurrentRedeemedRewardId(' ');
+    }, 60000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
 
   const handleRedeemPress = async (item) => {
@@ -205,7 +220,7 @@ const Rewards = () => {
         <Text style={styles.noRewardsText}>You are out of rewards. Get new rewards from your preferred restaurant. </Text>
       ) : (
           itemsToRedeem.map((item,index) => (
-          <RewardItem key={`${item.id}-${index}`} item={item} onPress={handleRedeemPress} />
+          <RewardItem key={`${item.id}-${index}`} item={item} onPress={handleRedeemPress} currentrdId={currentRedeemedRewardId}/>
         ))
       )}
       <Modal visible={showModal} animationType="slide" transparent={true}>
