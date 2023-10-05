@@ -87,7 +87,7 @@ const RedeemedRewards = () => {
                 redeemedRewards?.length === 0 ? (
                     <Text style={styles.noRewardsText}>You dont have any redeemed rewards!. </Text>
                 ) : (
-                    redeemedRewards.map((item,index) => (
+                    redeemedRewards?.map((item,index) => (
                         <RewardItem key={`${item.id}-${index}`} item={item} currentrdId={currentRedeemedRewardId}/>
                     ))
                 )
