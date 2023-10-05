@@ -70,7 +70,7 @@ const RewardItem = ({ item, onPress, currentrdId }) => {
         <Image source={{uri:item?.image}} style={globalStyles.image} />
       </View>
       <View style={styles.textContainer}>
-        <Text style={styles.text}>{item.count}{item.name}</Text>
+        <Text style={styles.text}>{item.count} {item.name}</Text>
         <Text style={styles.additionalText}>You only spent {item.points} points</Text>
         <Text style={styles.additionalText}>{item.restaurant.rst_name}</Text>
       </View>
