@@ -15,6 +15,7 @@ import Rewards from './screens/Rewards';
 import Profile from './screens/Profile';
 import SpecificVendor from './screens/SpecificVendor'
 import AllRestaurants from './screens/AllRestaurants';
+import RedeemedRewards from "./screens/RedeemedRewards";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -144,6 +145,11 @@ export default function MainApp() {
           component={SpecificVendorComponent}
           options={{ headerShown: false }}
         />
+          <Stack.Screen
+              name="RedeemedRewards"
+              component={RedeemedRewards}
+              options={{ headerShown: false }}
+          />
         <Stack.Screen
           name="AllRestaurants"
           component={AllRestaurants}

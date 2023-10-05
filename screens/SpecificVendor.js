@@ -84,16 +84,23 @@ const Vendor = (props) => {
                     const rewards_to_redeem = await AsyncStorage.getItem('rewards_to_redeem');
 
                     if (rewards_to_redeem){
-                        const rewards_array = JSON.parse(rewards_to_redeem)
+                        let rewards_array = JSON.parse(rewards_to_redeem)
                         setCurrentRedeemedRewardId(id);
-                        rewards_array.push({
-                            id:id,
-                            name:title,
-                            image:imageSource,
-                            points:points,
-                            redeemed: false,
-                            restaurant:rest
-                        })
+                        const found_item = rewards_array.find((item) => item.id === id)
+                        if (found_item){
+                            found_item.count += 1
+                        }else {
+                            rewards_array.push({
+                                id:id,
+                                name:title,
+                                image:imageSource,
+                                points:points,
+                                redeemed: false,
+                                restaurant:rest,
+                                count:1
+                            })
+                        }
+
                         await AsyncStorage.setItem('rewards_to_redeem', JSON.stringify(rewards_array));
                     }else {
                         let rewards = []
@@ -104,7 +111,8 @@ const Vendor = (props) => {
                             image:imageSource,
                             points:points,
                             redeemed: false,
-                            restaurant:rest
+                            restaurant:rest,
+                            count:1
                         })
 
                         await AsyncStorage.setItem('rewards_to_redeem', JSON.stringify(rewards));
