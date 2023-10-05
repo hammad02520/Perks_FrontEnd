@@ -92,6 +92,7 @@ const Rewards = () => {
   const [loadingRedeem, setLoadingRedeem] = useState(false);
   const [redeemedRewards, setRedeemedRewards] = useState();
   const {currentUser, setCurrentRedeemedRewardId, currentRedeemedRewardId} = usePerksContext()
+  const [isYesPrssed, setIsYesPrssed] = useState(false);
 
   async function loadData() {
     const rewards_to_redeem = await AsyncStorage.getItem('rewards_to_redeem');
@@ -129,7 +130,7 @@ const Rewards = () => {
 
   const handleRedeemPress = async (item) => {
     setLoadingRedeem(true);
-
+    console.log(item)
     try {
       const awardsData = await axios.get(
           `${BaseUrl}/api/generate_rewards?querytype=award&award=${item?.id}`,
@@ -203,23 +204,10 @@ const Rewards = () => {
     setShowModal(false);
   };
 
-  const handleConfirmPurchase = () => {
-    if (itemToRemove !== null) {
-      // Filter out the redeemed item
-      const updatedItems = items.filter((item) => item !== itemToRemove);
-
-      // An alert message displaying the one-time reward code
-      Alert.alert('This code will disappear once you press OK', 'Your code is 123456', [
-        {
-          text: 'OK',
-          onPress: () => {
-            // Update the state to remove the redeemed item
-            setItems(updatedItems);
-            setItemToRemove(null);
-            handleCloseModal();
-          },
-        },
-      ]);
+  const handleConfirmPurchase = (item) => {
+    setShowModal(true);
+    if (isYesPrssed){
+      handleRedeemPress(item)
     }
   };
 
@@ -233,7 +221,7 @@ const Rewards = () => {
         <Text style={styles.noRewardsText}>You are out of rewards. Get new rewards from your preferred restaurant. </Text>
       ) : (
           itemsToRedeem.map((item,index) => (
-          <RewardItem key={`${item.id}-${index}`} item={item} onPress={() => setShowModal(true)} currentrdId={currentRedeemedRewardId}/>
+          <RewardItem key={`${item.id}-${index}`} item={item} onPress={handleConfirmPurchase} currentrdId={currentRedeemedRewardId}/>
         ))
       )}
       <TouchableOpacity style={styles.recommendButton} onPress={() => {navigation.navigate( 'RedeemedRewards');}}>
@@ -250,7 +238,7 @@ const Rewards = () => {
                 <Text style={styles.modalButtonText}>No</Text>
               </TouchableOpacity>
               <View style={{ width: 10 }} />
-              <TouchableOpacity style={styles.modalButton2} onPress={handleRedeemPress}>
+              <TouchableOpacity style={styles.modalButton2} onPress={()=> setIsYesPrssed(true)}>
                 <Text style={styles.modalButtonText}>Yes</Text>
               </TouchableOpacity>
             </View>
