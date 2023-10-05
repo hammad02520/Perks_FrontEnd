@@ -13,7 +13,7 @@ export default function App(message) {
   const navigation = useNavigation();
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
-  const { currentUser, setUserPointsUpdated } = usePerksContext();
+  const { currentUser, setUserPointsUpdated, userPointsUpdated } = usePerksContext();
 
 
   useFocusEffect(
@@ -43,10 +43,6 @@ export default function App(message) {
       setScanned(false); // Allow scanning again after the alert
       return;
     }
-
-    const parsedData = {
-      coupon_id: data,
-    };
 
     try {
       const response = await axios.get(
@@ -78,7 +74,7 @@ export default function App(message) {
             total_points_earned: points
           }
         });
-        setUserPointsUpdated(true);
+        setUserPointsUpdated(userPointsUpdated+1);
         const message = `Congratulations! You just earned ${points} points at ${response.data?.restraurant?.name}.`;
         alert(message, [
           {

@@ -13,7 +13,7 @@ const AllRestaurants = () => {
   const navigation = useNavigation();
     const [restaurantss, setRestaurantss] = useState();
     const [loadingData, setLoadingData] = useState(false);
-    const {currentUser} = usePerksContext();
+    const {currentUser,userPointsUpdated} = usePerksContext();
 
     useEffect(() => {
         async function loadRestaurants() {
@@ -39,7 +39,7 @@ const AllRestaurants = () => {
 
         loadRestaurants();
 
-    }, []);
+    }, [userPointsUpdated, currentUser]);
 
   const [searchText, setSearchText] = useState('');
   const [modalFilteredRestaurants, setModalFilteredRestaurants] = useState([]);

@@ -15,7 +15,6 @@ import { SvgXml } from "react-native-svg";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
-import supabase from "../api/supabaseClient";
 import * as Location from "expo-location";
 import styles from "../screenstyles/homeStyles"; // Import styles from the separate file
 import { ScrollView } from "react-native-gesture-handler";
@@ -31,7 +30,7 @@ export default function Home(props) {
   const [locationText, setLocationText] = useState("Your location");
   const [userLocation, setUserLocation] = useState(null);
   const [userRestaurantData, setUserRestaurantData] = useState([]);
-  const [visitedRestaurants, setVisitedRestaurants] = useState();
+  const [visitedRestaurants, setVisitedRestaurants] = useState([]);
   const [loadingData, setLoadingData] = useState(false);
   const {currentUser, userPointsUpdated} = usePerksContext()
 
@@ -50,8 +49,7 @@ export default function Home(props) {
             }
         );
         const data = response.data
-        console.log(response)
-        const restVisited =await data.data?.filter((data) => data?.total_points !== 0)
+        const restVisited =await data?.filter((data) => data?.total_points !== 0)
         setVisitedRestaurants(restVisited)
         setUserRestaurantData(data)
         setLoadingData(false)
@@ -198,28 +196,6 @@ export default function Home(props) {
             });
           }}
         >
-          <View style={styles.cardContainerShishi}>
-            <Image
-              resizeMode="contain"
-              style={styles.shishiImg}
-              source={require("../assets/images/shishi.jpg")}
-            />
-            <View>
-              <Text style={styles.restaurantname}>Shishi</Text>
-              <Text style={styles.pointsCard}>points: 200</Text>
-            </View>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.openButton}
-          activeOpacity={0.5}
-          onPress={() => {
-            navigation.navigate("SpecificVendorStack", {
-              screen: "SpecificVendor",
-            });
-          }}
-        >
           <View style={styles.cardContainerCrave}>
             <Image
               resizeMode="contain"
@@ -228,7 +204,7 @@ export default function Home(props) {
             />
             <View>
               <Text style={styles.restaurantname}>Crave</Text>
-              <Text style={styles.pointsCard}>points: 0</Text>
+              <Text style={styles.pointsCard}>points: 5</Text>
             </View>
           </View>
         </TouchableOpacity>
