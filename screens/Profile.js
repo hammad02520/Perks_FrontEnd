@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, ScrollView, StyleSheet, Image, Modal, TouchableOpacity } from 'react-native';
+import {View, Text, TextInput, ScrollView, StyleSheet, Image, Modal, TouchableOpacity, Alert} from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { useNavigation } from '@react-navigation/native';
 import { logoSvgCode, profilepic, editicon, profileicon, phonecallicon, bookicon, calendericon, mailicon, globeicon, logoutIcon } from '../svgData/svgData'; // Import the SVG data
@@ -136,7 +136,7 @@ const Profile = (props) => {
                         // Navigate to the Login screen
                         navigation.navigate('Login');
                     },
-                    style: 'destructive', // This style indicates a destructive action
+                    style: 'destructive', 
                 },
             ],
             { cancelable: false }
