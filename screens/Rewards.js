@@ -24,6 +24,34 @@ import {useNavigation} from "@react-navigation/native";
 
 const windowWidth = Dimensions.get('window').width;
 
+const RewardItem = ({ item, currentrdId, onPress }) => {
+  const containerStyle = Platform.OS === 'ios' ? styles.rectangleIOS : styles.rectangleAndroid;
+  const backgroundColor = currentrdId === item?.id  ? 'rgba(169, 169, 169, 0.5)' : 'white';
+
+  return (
+      <View key={item.title} style={[
+        containerStyle,
+        {
+          width: windowWidth * 0.9,
+          backgroundColor
+        },
+      ]}>
+        <View style={globalStyles.borderradiusforimage}>
+          <Image source={{uri:item?.image}} style={globalStyles.image} />
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.text}>{item.count} {item.name}</Text>
+          <Text style={styles.additionalText}>You only spent {item.points} points</Text>
+          <Text style={styles.additionalText}>{item.restaurant.rst_name}</Text>
+        </View>
+
+            <TouchableOpacity style={globalStyles.getAndRedeemButton} onPress={() => onPress(item)}>
+              <Text style={globalStyles.getAndRedeemReward}>Redeem</Text>
+            </TouchableOpacity>
+
+      </View>
+  );
+};
 const Rewards = () => {
   const navigation = useNavigation();
   const [showModal, setShowModal] = useState(false);
@@ -143,40 +171,16 @@ const Rewards = () => {
   };
 
   const handleConfirmPurchase = (item) => {
+    console.log('====================================');
+    console.log(item);
+    console.log('====================================');
     setShowModal(true);
 
    setSelectedItem(item)
   };
 
 
-  const RewardItem = ({ item, currentrdId }) => {
-    const containerStyle = Platform.OS === 'ios' ? styles.rectangleIOS : styles.rectangleAndroid;
-    const backgroundColor = currentrdId === item?.id  ? 'rgba(169, 169, 169, 0.5)' : 'white';
 
-    return (
-        <View key={item.title} style={[
-          containerStyle,
-          {
-            width: windowWidth * 0.9,
-            backgroundColor
-          },
-        ]}>
-          <View style={globalStyles.borderradiusforimage}>
-            <Image source={{uri:item?.image}} style={globalStyles.image} />
-          </View>
-          <View style={styles.textContainer}>
-            <Text style={styles.text}>{item.count} {item.name}</Text>
-            <Text style={styles.additionalText}>You only spent {item.points} points</Text>
-            <Text style={styles.additionalText}>{item.restaurant.rst_name}</Text>
-          </View>
-
-              <TouchableOpacity style={globalStyles.getAndRedeemButton} onPress={() => handleConfirmPurchase(item)}>
-                <Text style={globalStyles.getAndRedeemReward}>Redeem</Text>
-              </TouchableOpacity>
-
-        </View>
-    );
-  };
 
 
 
@@ -187,7 +191,7 @@ const Rewards = () => {
         <Text style={styles.noRewardsText}>You are out of rewards. Get new rewards from your preferred restaurant. </Text>
       ) : (
           itemsToRedeem.map((item,index) => (
-          <RewardItem key={`${item.id}-${index}`} item={item} currentrdId={currentRedeemedRewardId}/>
+          <RewardItem key={`${item.id}-${index}`} item={item} currentrdId={currentRedeemedRewardId} onPress={handleConfirmPurchase}/>
         ))
       )}
       <TouchableOpacity style={styles.recommendButton} onPress={() => {navigation.navigate('RedeemedRewards');}}>
