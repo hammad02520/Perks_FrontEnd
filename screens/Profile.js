@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, ScrollView, StyleSheet, Image, Modal, TouchableOpacity } from 'react-native';
+import {View, Text, TextInput, ScrollView, StyleSheet, Image, Modal, TouchableOpacity, Alert} from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { useNavigation } from '@react-navigation/native';
 import { logoSvgCode, profilepic, editicon, profileicon, phonecallicon, bookicon, calendericon, mailicon, globeicon, logoutIcon } from '../svgData/svgData'; // Import the SVG data
@@ -9,6 +9,7 @@ import styles from '../screenstyles/profileStyles';
 import CheckBox from "expo-checkbox";
 import DateTimePicker from './../node_modules/@react-native-community/datetimepicker/src/datetimepicker';
 import {usePerksContext} from "../context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ModalComponent = ({ isVisible, onClose, children }) => (
   <Modal visible={isVisible} transparent={true} animationType="slide">
@@ -117,9 +118,29 @@ const Profile = (props) => {
         }
     };
     const handleLogout = () => {
-      // Implement your logout logic here
-      navigation.pop();
-      navigation.navigate('Login');
+        // Display a confirmation dialog before logging out
+        Alert.alert(
+            'Logout Confirmation',
+            'Are you sure you want to logout?',
+            [
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Logout',
+                    onPress: async () => {
+                        // Clear AsyncStorage and any other necessary cleanup
+                        await AsyncStorage.clear();
+
+                        // Navigate to the Login screen
+                        navigation.navigate('Login');
+                    },
+                    style: 'destructive', 
+                },
+            ],
+            { cancelable: false }
+        );
     };
 
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);

@@ -49,9 +49,13 @@ export default function Home(props) {
             }
         );
         const data = response.data
-        const restVisited =await data?.filter((data) => data?.total_points !== 0)
-        setVisitedRestaurants(restVisited)
-        setUserRestaurantData(data)
+        const sortedRestaurants = data.sort((a, b) => b.total_points - a.total_points);
+
+        // Filter the top N restaurants with the highest points (e.g., top 5)
+        const topRestaurants = sortedRestaurants.slice(0, 3);
+
+        setVisitedRestaurants(topRestaurants);
+        setUserRestaurantData(data);
         setLoadingData(false)
       }catch (e) {
         alert(`Error ${e.message}`)
@@ -70,7 +74,28 @@ export default function Home(props) {
     }
   };
 
-  const submitRecommendation = () => {
+  const submitRecommendation = async () => {
+    setModalVisible(!isModalVisible);
+    // Reset locationText when the modal is closed
+    if (!isModalVisible) {
+      setLocationText("");
+    }
+     try {
+
+       const response = await axios.post(`${BaseUrl}/api/send_recommendation`, {
+             recommendationText: recommendationText
+           },
+           {
+             headers: {
+               'Content-Type': 'application/json'
+             }
+
+           });
+
+       console.log(response.data)
+     }catch (e) {
+
+     }
     // Handle the submission of recommendationText here
     // You can send it to a backend or perform other actions
     toggleModal();
@@ -186,28 +211,6 @@ export default function Home(props) {
             <Text style={[styles.restaurantname, {color:"black"}]}>You haven't visited any restaurant yet</Text>
         )}
 
-
-        <TouchableOpacity
-          style={styles.openButton}
-          activeOpacity={0.5}
-          onPress={() => {
-            navigation.navigate("SpecificVendorStack", {
-              screen: "SpecificVendor",
-            });
-          }}
-        >
-          <View style={styles.cardContainerCrave}>
-            <Image
-              resizeMode="contain"
-              style={styles.craveImg}
-              source={require("../assets/images/crave.jpg")}
-            />
-            <View>
-              <Text style={styles.restaurantname}>Crave</Text>
-              <Text style={styles.pointsCard}>points: 5</Text>
-            </View>
-          </View>
-        </TouchableOpacity>
       </View>
 
       {/* All restaurants in our system */}
@@ -285,7 +288,7 @@ export default function Home(props) {
               </TouchableOpacity>
               <Text style={styles.coordinates}>{locationText}</Text>
             </View>
-            <TouchableOpacity style={styles.modalButton} onPress={toggleModal}>
+            <TouchableOpacity style={styles.modalButton} onPress={submitRecommendation}>
               <Text style={styles.modalButtonText}>Done</Text>
             </TouchableOpacity>
           </View>

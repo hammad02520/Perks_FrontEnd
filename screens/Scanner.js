@@ -36,6 +36,7 @@ export default function App(message) {
   }, []);
 
   const handleBarCodeScanned = async ({ type, data }) => {
+
     setScanned(true);
 
     if (!currentUser) {
@@ -93,7 +94,6 @@ export default function App(message) {
     }
   };
 
-  console.log(scanned)
 
   if (hasPermission === null) {
     return <Text style={styles.statusText}>Requesting camera permission</Text>;
