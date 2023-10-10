@@ -10,6 +10,9 @@ import {
   Alert,
   VirtualizedList,
 } from 'react-native';
+import {
+  Dialog
+} from '@rneui/themed';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import globalStyles from '../styles';
 import styles from '../screenstyles/rewardStyles';
@@ -21,78 +24,15 @@ import {useNavigation} from "@react-navigation/native";
 
 const windowWidth = Dimensions.get('window').width;
 
-const Colors = {
-  primary: 'blue',
-  danger: '#D62828',
-  success: 'green',
-};
-const initialItems = [
-  { title: "Free burger", description: "You only spent 3,000 points", redeemed: false },
-  { title: "Free shawarma", description: "You only spent 2,800 points", redeemed: false },
-  { title: "Free soda", description: "You only spent 1,000 points", redeemed: false },
-  { title: "Free ice cream", description: "You only spent 1,200 points", redeemed: false },
-  { title: "Free fries", description: "You only spent 800 points", redeemed: false },
-  { title: "Free salad", description: "You only spent 900 points", redeemed: false },
-];
-
-const RewardItem = ({ item, onPress, currentrdId }) => {
-  const containerStyle = Platform.OS === 'ios' ? styles.rectangleIOS : styles.rectangleAndroid;
-  const backgroundColor = currentrdId === item?.id  ? 'rgba(169, 169, 169, 0.5)' : 'white';
-
-  const getImageSource = () => {
-    switch (item.title) {
-      case 'Free burger':
-        return require('../assets/images/burger2.png');
-      case 'Free shawarma':
-        return require('../assets/images/shawarma2.png');
-      case 'Free soda':
-        return require('../assets/images/soda.png');
-      case 'Free ice cream':
-        return require('../assets/images/icecream.png');
-      case 'Free fries':
-        return require('../assets/images/fries.png');
-      case 'Free salad':
-        return require('../assets/images/salad.png');
-      default:
-        return require('../assets/images/soda.png');
-    }
-  };
-
-  return (
-    <View key={item.title} style={[
-      containerStyle,
-      {
-        width: windowWidth * 0.9,
-        backgroundColor
-      },
-    ]}>
-      <View style={globalStyles.borderradiusforimage}>
-        <Image source={{uri:item?.image}} style={globalStyles.image} />
-      </View>
-      <View style={styles.textContainer}>
-        <Text style={styles.text}>{item.count} {item.name}</Text>
-        <Text style={styles.additionalText}>You only spent {item.points} points</Text>
-        <Text style={styles.additionalText}>{item.restaurant.rst_name}</Text>
-      </View>
-      {!item.redeemed && (
-        <TouchableOpacity style={globalStyles.getAndRedeemButton} onPress={() => onPress(item)}>
-          <Text style={globalStyles.getAndRedeemReward}>Redeem</Text>
-        </TouchableOpacity>
-      )}
-    </View>
-  );
-};
-
 const Rewards = () => {
   const navigation = useNavigation();
   const [showModal, setShowModal] = useState(false);
   const [itemsToRedeem, setItemsToRedeem] = useState([]);
-  const [items, setItems] = useState(initialItems);
   const [itemToRemove, setItemToRemove] = useState(null);
   const [loadingRedeem, setLoadingRedeem] = useState(false);
   const [redeemedRewards, setRedeemedRewards] = useState();
   const {currentUser, setCurrentRedeemedRewardId, currentRedeemedRewardId} = usePerksContext()
-  const [isYesPrssed, setIsYesPrssed] = useState(false);
+  const [selectedItem, setSelectedItem] = useState();
 
   async function loadData() {
     const rewards_to_redeem = await AsyncStorage.getItem('rewards_to_redeem');
@@ -195,8 +135,6 @@ const Rewards = () => {
       alert(`Error ${e.message}`)
       setLoadingRedeem(false);
     }
-
-
     setItemToRemove(item);
   };
 
@@ -206,11 +144,39 @@ const Rewards = () => {
 
   const handleConfirmPurchase = (item) => {
     setShowModal(true);
-    if (isYesPrssed){
-      handleRedeemPress(item)
-    }
+
+   setSelectedItem(item)
   };
 
+
+  const RewardItem = ({ item, currentrdId }) => {
+    const containerStyle = Platform.OS === 'ios' ? styles.rectangleIOS : styles.rectangleAndroid;
+    const backgroundColor = currentrdId === item?.id  ? 'rgba(169, 169, 169, 0.5)' : 'white';
+
+    return (
+        <View key={item.title} style={[
+          containerStyle,
+          {
+            width: windowWidth * 0.9,
+            backgroundColor
+          },
+        ]}>
+          <View style={globalStyles.borderradiusforimage}>
+            <Image source={{uri:item?.image}} style={globalStyles.image} />
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.text}>{item.count} {item.name}</Text>
+            <Text style={styles.additionalText}>You only spent {item.points} points</Text>
+            <Text style={styles.additionalText}>{item.restaurant.rst_name}</Text>
+          </View>
+
+              <TouchableOpacity style={globalStyles.getAndRedeemButton} onPress={() => handleConfirmPurchase(item)}>
+                <Text style={globalStyles.getAndRedeemReward}>Redeem</Text>
+              </TouchableOpacity>
+
+        </View>
+    );
+  };
 
 
 
@@ -221,10 +187,10 @@ const Rewards = () => {
         <Text style={styles.noRewardsText}>You are out of rewards. Get new rewards from your preferred restaurant. </Text>
       ) : (
           itemsToRedeem.map((item,index) => (
-          <RewardItem key={`${item.id}-${index}`} item={item} onPress={handleConfirmPurchase} currentrdId={currentRedeemedRewardId}/>
+          <RewardItem key={`${item.id}-${index}`} item={item} currentrdId={currentRedeemedRewardId}/>
         ))
       )}
-      <TouchableOpacity style={styles.recommendButton} onPress={() => {navigation.navigate( 'RedeemedRewards');}}>
+      <TouchableOpacity style={styles.recommendButton} onPress={() => {navigation.navigate('RedeemedRewards');}}>
         <Text style={styles.recommendText}>Your last 5 redeemed rewards</Text>
       </TouchableOpacity>
       <Modal visible={showModal} animationType="slide" transparent={true}>
@@ -238,7 +204,7 @@ const Rewards = () => {
                 <Text style={styles.modalButtonText}>No</Text>
               </TouchableOpacity>
               <View style={{ width: 10 }} />
-              <TouchableOpacity style={styles.modalButton2} onPress={()=> setIsYesPrssed(true)}>
+              <TouchableOpacity style={styles.modalButton2} onPress={ () => handleRedeemPress(selectedItem)}>
                 <Text style={styles.modalButtonText}>Yes</Text>
               </TouchableOpacity>
             </View>

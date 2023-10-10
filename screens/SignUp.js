@@ -27,12 +27,12 @@ export default function SignUp() {
     try {
       setIsLoading(true);
       const response = await axios.post(`${BaseUrl}/api/auth/register`, {
-        email: email,
-        password: password,
+            email: email,
+            password: password,
             fname: firstName,
             lname: lastName,
             phone_number: phoneNumber,
-           username:firstName
+            username:firstName,
           },
           {
             headers: {
@@ -65,7 +65,7 @@ export default function SignUp() {
           <View style={styles.logoImg}>
             <SvgXml xml={logoSvgCode} width="100%" height="100%" />
           </View>
-          <Text style={styles.nameText}>erks</Text>
+          <Text style={styles.nameText}>Perks</Text>
         </View>
 
         <Text>Earn your money back with us</Text>

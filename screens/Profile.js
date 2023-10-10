@@ -9,6 +9,7 @@ import styles from '../screenstyles/profileStyles';
 import CheckBox from "expo-checkbox";
 import DateTimePicker from './../node_modules/@react-native-community/datetimepicker/src/datetimepicker';
 import {usePerksContext} from "../context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ModalComponent = ({ isVisible, onClose, children }) => (
   <Modal visible={isVisible} transparent={true} animationType="slide">
@@ -116,10 +117,11 @@ const Profile = (props) => {
             setPickedImage(result.assets[0].uri);
         }
     };
-    const handleLogout = () => {
+    const handleLogout = async () => {
       // Implement your logout logic here
-      navigation.pop();
-      navigation.navigate('Login');
+        await AsyncStorage.clear();
+        navigation.pop();
+        navigation.navigate('Login');
     };
 
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);

@@ -31,11 +31,14 @@ const WelcomePage = (props) => {
             //     props.navigation.navigate('Login');
             //     return;
             // }
-            setToken(token)
-            const transformedData = JSON.parse(userData);
-            setCurrentUser(transformedData)
+            if (token){
+                setToken(token)
+                const transformedData = JSON.parse(userData);
+                setCurrentUser(transformedData)
 
-            // props.navigation.navigate('MainScreens');
+                props.navigation.navigate('MainScreens');
+            }
+
         };
 
         tryLogin()

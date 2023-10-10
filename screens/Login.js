@@ -17,7 +17,7 @@ export default function Login(){
     const navigation = useNavigation();
     const [passwordVisible, setPasswordVisible] = useState(false);
     // const [phoneNumber, setPhoneNumber] = useState(''); // State to store phone number
-    const [email, setEmail] = useState('');
+    const [phone_number, setphone_number] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const {setCurrentUser} = usePerksContext()
@@ -28,7 +28,7 @@ export default function Login(){
         try {
 
             const response = await axios.post(`${BaseUrl}/api/auth/login`, {
-                email: email,
+                    phone_number: phone_number,
                 password: password,
             },
             {
@@ -88,10 +88,10 @@ export default function Login(){
                 <Text style={styles.loginText}>Login</Text>
 
                 <TextInput
-                    placeholder="Email"
-                    keyboardType="email-address"
-                    value={email}
-                    onChangeText={setEmail}
+                    placeholder="Phone number"
+                    keyboardType="phone-pad"
+                    value={phone_number}
+                    onChangeText={setphone_number}
                     style={[globalStyles.input, styles.input]} />
 
                 <View style={styles.passwordInputContainer}>
