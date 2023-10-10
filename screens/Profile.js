@@ -117,11 +117,30 @@ const Profile = (props) => {
             setPickedImage(result.assets[0].uri);
         }
     };
-    const handleLogout = async () => {
-      // Implement your logout logic here
-        await AsyncStorage.clear();
-        navigation.pop();
-        navigation.navigate('Login');
+    const handleLogout = () => {
+        // Display a confirmation dialog before logging out
+        Alert.alert(
+            'Logout Confirmation',
+            'Are you sure you want to logout?',
+            [
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Logout',
+                    onPress: async () => {
+                        // Clear AsyncStorage and any other necessary cleanup
+                        await AsyncStorage.clear();
+
+                        // Navigate to the Login screen
+                        navigation.navigate('Login');
+                    },
+                    style: 'destructive', // This style indicates a destructive action
+                },
+            ],
+            { cancelable: false }
+        );
     };
 
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);

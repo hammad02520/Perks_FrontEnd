@@ -10,9 +10,6 @@ import {
   Alert,
   VirtualizedList,
 } from 'react-native';
-import {
-  Dialog
-} from '@rneui/themed';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import globalStyles from '../styles';
 import styles from '../screenstyles/rewardStyles';
@@ -171,9 +168,6 @@ const Rewards = () => {
   };
 
   const handleConfirmPurchase = (item) => {
-    console.log('====================================');
-    console.log(item);
-    console.log('====================================');
     setShowModal(true);
 
    setSelectedItem(item)

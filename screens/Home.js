@@ -82,7 +82,7 @@ export default function Home(props) {
     }
      try {
 
-       const response = await axios.post(`${BaseUrl}/send_recommendation`, {
+       const response = await axios.post(`${BaseUrl}/api/send_recommendation`, {
              recommendationText: recommendationText
            },
            {
