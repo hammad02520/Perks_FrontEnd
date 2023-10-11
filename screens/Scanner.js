@@ -15,7 +15,6 @@ export default function App(message) {
   const [scanned, setScanned] = useState(false);
   const { currentUser, setUserPointsUpdated, userPointsUpdated } = usePerksContext();
 
-
   useFocusEffect(
       React.useCallback(() => {
         // This function is called when the screen comes into focus
@@ -31,7 +30,6 @@ export default function App(message) {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
       setHasPermission(status === 'granted');
     };
-
     getBarCodeScannerPermissions();
   }, []);
 
@@ -44,7 +42,6 @@ export default function App(message) {
       setScanned(false); // Allow scanning again after the alert
       return;
     }
-
     try {
       const response = await axios.get(
           `${BaseUrl}/api/coupon?querytype=single&coupon=${data}`,
@@ -62,7 +59,8 @@ export default function App(message) {
           {
             user: currentUser.id,
             restraurant:response.data?.restraurant.id,
-            total_points: points
+            total_points: points,
+            coupon:response.data?.id
           }
       )
       console.log(pointsRsp.data)
@@ -111,7 +109,6 @@ export default function App(message) {
               style={styles.barcodeScanner}
           />
         </View>
-
 
         <View style={styles.overlay}>
           <View style={styles.header}>

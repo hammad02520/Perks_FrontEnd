@@ -9,14 +9,11 @@ import {
   Modal,
   Platform,
 } from "react-native";
-import { profile } from "../svgData/svgData";
 import { useNavigation } from "@react-navigation/native";
-import { SvgXml } from "react-native-svg";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Feather } from "@expo/vector-icons";
 import * as Location from "expo-location";
-import styles from "../screenstyles/homeStyles"; // Import styles from the separate file
+import styles from "../screenstyles/homeStyles";
 import { ScrollView } from "react-native-gesture-handler";
 import {usePerksContext} from "../context";
 import axios from "axios";
@@ -31,6 +28,7 @@ export default function Home(props) {
   const [userLocation, setUserLocation] = useState(null);
   const [userRestaurantData, setUserRestaurantData] = useState([]);
   const [visitedRestaurants, setVisitedRestaurants] = useState([]);
+  const [unVisitedRestaurants, setUnVisitedRestaurants] = useState();
   const [loadingData, setLoadingData] = useState(false);
   const {currentUser, userPointsUpdated} = usePerksContext()
 
@@ -50,10 +48,13 @@ export default function Home(props) {
         );
         const data = response.data
         const sortedRestaurants = data.sort((a, b) => b.total_points - a.total_points);
+        const unvistited = data.filter((rst) => rst.total_points === 0)
+
 
         // Filter the top N restaurants with the highest points (e.g., top 5)
         const topRestaurants = sortedRestaurants.slice(0, 3);
 
+        setUnVisitedRestaurants(unvistited)
         setVisitedRestaurants(topRestaurants);
         setUserRestaurantData(data);
         setLoadingData(false)
@@ -227,8 +228,8 @@ export default function Home(props) {
 
       <View style={styles.specialAlign}>
 
-        {userRestaurantData?.length > 0 ? (
-            userRestaurantData?.slice(0,3).map((item) => {
+        {unVisitedRestaurants?.length > 0 ? (
+            unVisitedRestaurants?.slice(0,3).map((item) => {
               return   <TouchableOpacity
                   key={item?.id}
                   style={styles.openButton}
