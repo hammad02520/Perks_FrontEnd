@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {View, Text, TextInput, ScrollView, StyleSheet, Image, Modal, TouchableOpacity, Alert} from 'react-native';
+import {View, Text, TextInput, CommonActions, StyleSheet, Image, Modal, TouchableOpacity, Alert} from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { useNavigation } from '@react-navigation/native';
 import { logoSvgCode, profilepic, editicon, profileicon, phonecallicon, bookicon, calendericon, mailicon, globeicon, logoutIcon } from '../svgData/svgData'; // Import the SVG data
@@ -130,13 +130,12 @@ const Profile = (props) => {
                 {
                     text: 'Logout',
                     onPress: async () => {
-                        // Clear AsyncStorage and any other necessary cleanup
                         await AsyncStorage.clear();
 
                         // Navigate to the Login screen
                         navigation.navigate('Login');
                     },
-                    style: 'destructive', 
+                    style: 'destructive',
                 },
             ],
             { cancelable: false }
