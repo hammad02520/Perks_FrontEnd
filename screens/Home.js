@@ -84,7 +84,7 @@ export default function Home(props) {
      try {
 
        const response = await axios.post(`${BaseUrl}/api/send_recommendation`, {
-             recommendationText: recommendationText
+             recommendationText: recommendationText + userLocation
            },
            {
              headers: {
@@ -161,7 +161,7 @@ export default function Home(props) {
                         >
                         <SvgXml xml={profile} style={styles.logoImage} />
                     </TouchableOpacity> */}
-          {loadingData? <Text style={styles.totalPointsText}>loading...</Text>: <Text style={styles.totalPoints}>{userRestaurantData[0]?.user?.total_points_made}</Text>}
+          {loadingData? <Text style={styles.totalPointsText}>loading...</Text>: <Text style={styles.totalPoints}>{userRestaurantData[0]?.user?.total_lifetime_points}</Text>}
           <Text style={styles.totalPointsText}> Total Perks Points </Text>
         </ImageBackground>
       </View>

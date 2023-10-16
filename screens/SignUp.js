@@ -27,36 +27,43 @@ export default function SignUp() {
     try {
       setIsLoading(true);
       const response = await axios.post(`${BaseUrl}/api/auth/register`, {
-            email: email,
-            password: password,
-            fname: firstName,
-            lname: lastName,
-            phone_number: phoneNumber,
-            username:firstName,
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              "X-CSRFToken": "{{ csrf_token }}"
-            }
-
-          });
+        email: email,
+        password: password,
+        fname: firstName,
+        lname: lastName,
+        phone_number: phoneNumber,
+        username: firstName,
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+          "X-CSRFToken": "{{ csrf_token }}"
+        }
+      });
 
       if (response.data.save === true) {
         navigation.navigate('Login');
-
-      }else {
-        console.error('Sign-up error:');
+      } else {
+        console.error('Sign-up error:', response.data.errors);
+        Alert.alert('Sign-up Error', 'An error occurred while signing up.');
       }
-
-
     } catch (err) {
-      console.error('Handle signup error:', err.message);
-      Alert.alert('Error', 'An error occurred while signing up.');
+      if (err.response) {
+        // Handle HTTP errors (e.g., 4xx, 5xx)
+        console.error('HTTP Error:', err.response.status, err.response.data);
+        Alert.alert('HTTP Error', 'An error occurred while making the request.');
+      } else if (err.message) {
+        // Handle network or request errors
+        console.error('Network Error:', err.message);
+        Alert.alert('Network Error', 'An error occurred while making the request.');
+      } else {
+        console.error('Unknown Error:', err);
+        Alert.alert('Unknown Error', 'An unknown error occurred.');
+      }
     } finally {
       setIsLoading(false);
     }
   };
+
 
   return (
     <ScrollView contentContainerStyle={globalStyles.scrollContainer}>
