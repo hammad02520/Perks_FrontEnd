@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
       textAlign: 'center',
       margin: 10,
       fontSize: 18,
+      paddingHorizontal: 20,
     },
     buttonContainer: {
       marginTop: 'auto',

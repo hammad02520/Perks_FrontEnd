@@ -93,7 +93,7 @@ titleText: {
   },
   specialAlign: {
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "space-evenly",
     height: "20%",
     width: "90%",
     flexDirection: "row",

@@ -23,7 +23,7 @@ const windowWidth = Dimensions.get('window').width;
 
 const RewardItem = ({ item, currentrdId, onPress }) => {
   const containerStyle = Platform.OS === 'ios' ? styles.rectangleIOS : styles.rectangleAndroid;
-  const backgroundColor = currentrdId === item?.id  ? 'rgba(169, 169, 169, 0.5)' : 'white';
+  const backgroundColor = currentrdId === item?.id  ? 'rgba(255, 215, 0, 0.5)' : 'white';
 
   return (
       <View key={item.title} style={[
@@ -87,7 +87,7 @@ const Rewards = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setCurrentRedeemedRewardId(' ');
-    }, 60000);
+    }, 5000);
 
     return () => clearTimeout(timer);
   }, []);
