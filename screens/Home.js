@@ -72,7 +72,7 @@ export default function Home(props) {
         // Filter the top N restaurants with the highest points (e.g., top 5)
         const topRestaurants = sortedRestaurants.slice(0, 3);
 
-        setUnVisitedRestaurants(unvistited)
+        setUnVisitedRestaurants(data?.slice(0, 3))
         setVisitedRestaurants(topRestaurants);
         setUserRestaurantData(data);
         setLoadingData(false)

@@ -25,7 +25,7 @@ const WelcomePage = (props) => {
     useEffect(() => {
         const tryLogin = async () => {
             const userData = await AsyncStorage.getItem('user');
-            const  token = await  AsyncStorage.getItem("authToken")
+            const  token = await  AsyncStorage.getItem("authToken");
 
             // if (!userData) {
             //     props.navigation.navigate('Login');

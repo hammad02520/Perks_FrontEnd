@@ -6,7 +6,6 @@ import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 import { logoSvgCode } from './Welcome';
 import globalStyles from '../styles';
-import supabase from '../api/supabaseClient';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from '../screenstyles/signupStyles';
 import axios from "axios";
