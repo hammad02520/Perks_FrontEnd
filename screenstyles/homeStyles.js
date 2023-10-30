@@ -214,12 +214,16 @@ titleText: {
     marginVertical: 15,
     padding: 15,
   },
+  modalbuttonview: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    width: '100%',
+  },
   modalButton: {
     backgroundColor: "#02113F",
-    width: "100%",
+    width: "45%",
     padding: 10,
-    borderRadius: 10,
-    marginTop: 10,
+    borderRadius: 30,
     alignItems: "center",
   },
   modalButtonText: {
@@ -229,7 +233,7 @@ titleText: {
   locationContainer: {
     width: "100%",
     alignItems: "center",
-    marginVertical: 20,
+    marginVertical: 10,
   },
   locationButton: {
     height: 40,
@@ -238,7 +242,7 @@ titleText: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-evenly",
-    borderRadius: 15,
+    borderRadius: 30,
     paddingHorizontal: 10,
   },
   recommendHereText: {
