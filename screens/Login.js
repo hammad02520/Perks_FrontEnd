@@ -5,7 +5,6 @@ import { SvgXml } from 'react-native-svg';
 import { logoSvgCode } from './Welcome'; // Adjust the path to match your file structure
 import globalStyles from '../styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import supabase from '../api/supabaseClient';
 import styles from '../screenstyles/loginStyles';
 import {usePerksContext} from "../context";
 import axios from "axios";
