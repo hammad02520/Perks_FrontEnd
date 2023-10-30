@@ -9,58 +9,68 @@ import {
   Modal,
   Alert,
   ImageBackground,
-  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import styles from '../screenstyles/rewardStyles';
+import styles from '../screenstyles/svRewardStyles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 import {BaseUrl} from "../api/BaseUrl";
 import {usePerksContext} from "../context";
 import {useNavigation} from "@react-navigation/native";
+import LottieView from 'lottie-react-native';
 
 const windowWidth = Dimensions.get('window').width;
 
-const RewardItem = ({ item, currentrdId, onPress }) => {
+
+const initialItems = [
+  { title: "Free burger", description: "You only spent 3,000 points", redeemed: false },
+  { title: "Free shawarma", description: "You only spent 2,800 points", redeemed: false },
+  { title: "Free soda", description: "You only spent 1,000 points", redeemed: false },
+  { title: "Free ice cream", description: "You only spent 1,200 points", redeemed: false },
+  { title: "Free fries", description: "You only spent 800 points", redeemed: false },
+  { title: "Free salad", description: "You only spent 900 points", redeemed: false },
+];
+
+const RewardItem = ({ item, onPress, currentrdId }) => {
   const containerStyle = Platform.OS === 'ios' ? styles.rectangleIOS : styles.rectangleAndroid;
   const backgroundColor = currentrdId === item?.id  ? 'rgba(255, 215, 0, 0.5)' : 'white';
 
   return (
-      <View key={item.title} style={[
-        containerStyle,
-        {
-          width: windowWidth * 0.9,
-          backgroundColor
-        },
-      ]}>
-        <View style={styles.borderradiusforimage}>
-          <Image source={{uri:item?.image}} style={styles.image} />
-        </View>
-        <View style={styles.textContainer}>
-          <Text style={styles.text}>{item.count} {item.name}</Text>
-          <Text style={styles.additionalText}>You only spent {item.points} points</Text>
-          <Text style={styles.additionalText}>{item.restaurant.rst_name}</Text>
-        </View>
-        {!item.redeemed && (
-          <TouchableOpacity style={styles.getAndRedeemButton} onPress={() => onPress(item)}>
-            <Text style={styles.getAndRedeemReward}>Redeem</Text>
-          </TouchableOpacity>
-        )}
+    <View key={item.title} style={[
+      containerStyle,
+      {
+        width: windowWidth * 0.9,
+        backgroundColor
+      },
+    ]}>
+      <View style={styles.borderRadiusForImage}>
+        <Image source={{uri:item?.image}} style={styles.image} />
       </View>
+      <View style={styles.textContainer}>
+        <Text style={styles.text}>{item.count} {item.name}</Text>
+        <Text style={styles.additionalText}>You only spent {item.points} points</Text>
+      </View>
+      {!item.redeemed && (
+        <TouchableOpacity style={styles.redeemButton} onPress={() => onPress(item)}>
+          <Text style={styles.redeemReward}>Redeem</Text>
+        </TouchableOpacity>
+      )}
+    </View>
   );
 };
 
-const Rewards = () => {
+const SVRewards = (props) => {
   const navigation = useNavigation();
   const [showModal, setShowModal] = useState(false);
   const [itemsToRedeem, setItemsToRedeem] = useState([]);
+  const [items, setItems] = useState(initialItems);
   const [itemToRemove, setItemToRemove] = useState(null);
   const [loadingRedeem, setLoadingRedeem] = useState(false);
   const [redeemedRewards, setRedeemedRewards] = useState();
   const {currentUser, setCurrentRedeemedRewardId, currentRedeemedRewardId} = usePerksContext()
-  const [selectedItem, setSelectedItem] = useState();
-  const [redeemedImageSource, setRedeemedImageSource] = useState(null);
-  const [redeemedCode, setRedeemedCode] = useState(null);
+  const [isYesPrssed, setIsYesPrssed] = useState(false);
+  
+  const restraurant = props.route.params?.restraurant;
 
   async function loadData() {
     const rewards_to_redeem = await AsyncStorage.getItem('rewards_to_redeem');
@@ -97,8 +107,6 @@ const Rewards = () => {
 
 
   const handleRedeemPress = async (item) => {
-    
-    console.log('Redeem pressed')
     setLoadingRedeem(true);
     console.log(item)
     try {
@@ -140,8 +148,17 @@ const Rewards = () => {
             }
 
             loadData();
-            
-            setRedeemedCode(response?.data?.award_code);
+            Alert.alert('This code will disappear once you press OK', `Your code is ${response?.data?.award_code}`, [
+              {
+                text: 'OK',
+                onPress: () => {
+                  // Update the state to remove the redeemed item
+                  // setItems(updatedItems);
+                  setItemToRemove(null);
+                  handleCloseModal();
+                },
+              },
+            ]);
             setLoadingRedeem(false);
           }else {
             alert("Something went wrong try again later!")
@@ -156,6 +173,8 @@ const Rewards = () => {
       alert(`Error ${e.message}`)
       setLoadingRedeem(false);
     }
+
+
     setItemToRemove(item);
   };
 
@@ -164,12 +183,13 @@ const Rewards = () => {
   };
 
   const handleConfirmPurchase = (item) => {
-    console.log('Confirm pressed')
     setShowModal(true);
-    setRedeemedImageSource(item.image);
-    handleRedeemPress(item); 
-    setSelectedItem(item)
+    if (isYesPrssed){
+      handleRedeemPress(item)
+    }
   };
+
+  const filteredItems = itemsToRedeem.filter(item => item.restaurant.rst_name === restraurant);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -181,39 +201,38 @@ const Rewards = () => {
             </View>
         </ImageBackground>
       </View>
-      {itemsToRedeem.length === 0 ? (
-        <Text style={styles.noRewardsText}>You do not have any rewards currently. Get new rewards from your preferred restaurant. </Text>
+      <Text style={styles.restaurantText}>Rewards from: {restraurant}</Text>
+      {filteredItems.length === 0 ? (
+        <View style={styles.noRewardsView}>
+          <Text  style={styles.noRewardsText}>You don't have any rewards currently.</Text>
+          <LottieView
+            source={require('../assets/animations/unavailableAnimation.json')}
+            autoPlay
+            loop
+          />
+        </View>
       ) : (
-          itemsToRedeem.map((item,index) => (
-          <RewardItem key={`${item.id}-${index}`} item={item} currentrdId={currentRedeemedRewardId} onPress={handleConfirmPurchase}/>
+        filteredItems.map((item, index) => (
+          <RewardItem key={`${item.id}-${index}`} item={item} onPress={handleConfirmPurchase} currentrdId={currentRedeemedRewardId} />
         ))
       )}
-      <TouchableOpacity style={styles.recommendButton} onPress={() => {navigation.navigate('RedeemedRewards');}}>
+      <TouchableOpacity style={styles.recommendButton} onPress={() => {navigation.navigate( 'RedeemedRewards');}}>
         <Text style={styles.recommendText}>Your last 5 redeemed rewards</Text>
       </TouchableOpacity>
-      
-
       <Modal visible={showModal} animationType="fade" transparent={true}>
+        {/* ... (unchanged modal code) */}
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <View style={styles.circle} >
-              <Image style={styles.modalimage} source={redeemedImageSource ? { uri: redeemedImageSource } : require('../assets/images/soda.png')} />
-            </View>
-            <View style={styles.outlinedTextContainer}>
-              <Text style={[styles.modalTextTitle, styles.overlay]}>Congratulations 🎊</Text>
-              <Text style={styles.modalTextTitle}> Congratulations 🎊</Text>
-            </View>
-            <Text style={styles.modalText}>Show the code below to the waiter to get your reward.</Text>
-            
-            {loadingRedeem?
-              <View style={styles.loadingContainer}>
-                <ActivityIndicator size="large" color="#132D7B" />
-              </View>
-            : <Text style={styles.modalnumber}>Code: {redeemedCode}</Text>}
-            
+            <Text style={styles.modalText}>You will be provided with a special code that will only appear once.</Text>
+            <Text style={styles.modalText}>Are you sure you want to redeem this?</Text>
+            {loadingRedeem? <Text style={styles.modalText}>Loading...</Text>: <Text style={styles.modalText}>Loading ...</Text>}
             <View style={styles.buttonContainer}>
               <TouchableOpacity style={styles.modalButton} onPress={handleCloseModal}>
-                <Text style={styles.modalButtonText}>OK</Text>
+                <Text style={styles.modalButtonText}>No</Text>
+              </TouchableOpacity>
+              <View style={{ width: 10 }} />
+              <TouchableOpacity style={styles.modalButton2} onPress={()=> setIsYesPrssed(true)}>
+                <Text style={styles.modalButtonText}>Yes</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -223,4 +242,4 @@ const Rewards = () => {
   );
 };
 
-export default Rewards;
+export default SVRewards;

@@ -1,12 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import { View, Text, StyleSheet, ImageBackground, Image, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, Image, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import { logoSvgCode } from './Welcome'; // Adjust the path to match your file structure
 import { SvgXml } from 'react-native-svg';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import globalStyles from '../styles';
 import styles from '../screenstyles/specificVendorStyles';
-import ProgressBar from 'react-native-progress/Bar'; // Import the ProgressBar component
 import { ScrollView } from 'react-native-gesture-handler';
 import {usePerksContext} from "../context";
 import axios from "axios";
@@ -23,8 +21,8 @@ const Vendor = (props) => {
 
 
     async function userRstDataLoad (){
-        setLoadingData(false)
-     try {
+        try {
+         setLoadingData(true)
          const response = await axios.get(
                  `${BaseUrl}/api/user-restraurant?userId=${currentUser.id}`,
              {
@@ -121,7 +119,7 @@ const Vendor = (props) => {
                     // Show an alert when the "GET" button is pressed
                     Alert.alert(
                         'Reward Purchased',
-                        'You just purchased this product. Now go to the redeem page.',
+                        'You just purchased the product. Now you can redeem it here.',
                         [
                             {
                                 text: 'OK',
@@ -153,14 +151,14 @@ const Vendor = (props) => {
         };
 
         return (
-            <View style={globalStyles.rewardContainer} key={id}>
-                <Image style={globalStyles.rewardImg} source={{uri:imageSource}} />
-                <View style={globalStyles.rewardInfo}>
-                    <Text style={globalStyles.rewardCard}>{title}</Text>
-                    <Text style={globalStyles.pointsCard}>Points: {points}</Text>
+            <View style={styles.rewardContainer} key={id}>
+                <Image style={styles.rewardImg} source={{uri:imageSource}} />
+                <View style={styles.rewardInfo}>
+                    <Text style={styles.rewardCard}>{title}</Text>
+                    <Text style={styles.pointsCard}>Points: {points}</Text>
                 </View>
-                <TouchableOpacity style={globalStyles.getAndRedeemButton} onPress={handleGetReward}>
-                    <Text style={globalStyles.getAndRedeemReward}>Get</Text>
+                <TouchableOpacity style={styles.getAndRedeemButton} onPress={handleGetReward}>
+                    <Text style={styles.getAndRedeemReward}>Get</Text>
                 </TouchableOpacity>
             </View>
         );
@@ -168,45 +166,56 @@ const Vendor = (props) => {
 
 
   return (
-    <SafeAreaView style={[globalStyles.container, styles.container]}>
+    <SafeAreaView style={styles.container}>
       <SvgXml xml={logoSvgCode} width="5%" height="10%" />
 
-      <View style={globalStyles.card}>
-        <ImageBackground style={styles.imagesomething} source={require('../assets/images/darkBlueBackgroundmodified.png')}>
-          <View style={globalStyles.contentOfCard}>
-            <Text style={globalStyles.restaurantName}>{userResturantData?.restraurant.name}</Text>
-            <Text style={globalStyles.points}>{userResturantData?.total_points}pts</Text>
-            <Text style={globalStyles.remainingPoints}>1900pts till you can get a free drink</Text>
-            <Text style={globalStyles.userName}>{currentUser?.fname} {currentUser?.lname}</Text>
-          </View>
-          <View style={styles.progressBarContainer}>
-            <ProgressBar
-              progress={0.5} // Set the progress value here
-              width={330}
-              color="#FFD700"
-              style={styles.progressBar}
-            />
-          </View>
-        </ImageBackground>
-      </View>
-        <Text style={globalStyles.leftTitle}>Available rewards</Text>
-      <ScrollView style={styles.scrollcontainer}>
-          {loadingData? <Text>Loading...</Text>:  restaurantAwards?.length > 0
-              ? restaurantAwards.map((award) => {
-                  return <RewardCard title={award?.product} points={award?.points} imageSource={BaseUrl+award?.pic}  key={award?.id} id={award?.id} rest={
-                      {rst_name: restraurant,
-                          user_id: currentUser.id,
-                          rest_id: restId,
-                      }
-                  }/>
-              } )
-              : <Text style={[styles.restaurantname, {color:"black"}]}>No Awards Yet!!!</Text>}
+        <View style={styles.card}>
+            <ImageBackground style={styles.imagesomething} source={require('../assets/images/darkBlueBackgroundmodified.png')}>
+                <View style={styles.contentOfCard}>
+                    <Text style={styles.restaurantName}>{restraurant}</Text>
+                    {loadingData? (
+                        <View style={styles.loadingTopCard}>
+                            <ActivityIndicator size="large" color="gold" />
+                        </View>
+                    )
+                    : <Text style={styles.points}>{userResturantData?.total_points}pts</Text>}
+                    <Text style={styles.userName}>{currentUser?.fname} {currentUser?.lname}</Text>
+                </View>
+            </ImageBackground>
+        </View>
+        <View style={styles.rewardsRow}>
+            <Text style={styles.leftTitle}>Available rewards</Text>
+            <TouchableOpacity 
+                style={styles.rewardsButton}
+                onPress={() => {
+                    navigation.navigate('SVRewards', { restraurant: userResturantData?.restraurant.name });
+                }}
+            >
+                <Text style={styles.myRewardsText}>My rewards</Text>
+            </TouchableOpacity>
+        </View>
 
-        {/*<RewardCard title="Free shawarma" points="2800" imageSource={require('../assets/images/shawarma2.png')} />*/}
-        {/*<RewardCard title="Free burger" points="3000" imageSource={require('../assets/images/burger2.png')} />*/}
-        {/*<RewardCard title="Free soda" points="1000" imageSource={require('../assets/images/soda.png')} />*/}
-        {/*<RewardCard title="Free shawarma" points="2800" imageSource={require('../assets/images/shawarma2.png')} />*/}
-        {/*<RewardCard title="Free burger" points="3000" imageSource={require('../assets/images/burger2.png')} />*/}
+        <ScrollView style={styles.scrollcontainer}>
+          {loadingData ? (
+                <View style={styles.loadingContainer}>
+                    <ActivityIndicator size="larger" color="#132D7B" />
+                </View>
+            ) :  restaurantAwards?.length > 0 ? (
+                restaurantAwards.map((award) => {
+                  return (
+                    <RewardCard title={award?.product} points={award?.points} imageSource={BaseUrl+award?.pic}  key={award?.id} id={award?.id} 
+                        rest={
+                            {rst_name: restraurant,
+                                user_id: currentUser.id,
+                                rest_id: restId,
+                        }}    
+                    />
+                );
+            })
+        ) : (
+                <Text style={styles.noRewardsText}>No Rewards Yet</Text>
+        )}
+
       </ScrollView>
     </SafeAreaView>
   );

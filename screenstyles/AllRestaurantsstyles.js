@@ -22,13 +22,6 @@ const styles = StyleSheet.create({
   overlayContent: {
     height: '100%',
     width: '100%',
-    },
-  searchIcon: {
-    alignItems: 'flex-end',
-    padding: '5%',
-  },
-  searchInput: {
-    paddingRight: '50%',
   },
   titleText: {
     width: '100%',
@@ -38,11 +31,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white',
   },
+  searchIcon: {
+    alignItems: 'flex-end',
+    padding: '5%',
+  },
+  searchInput: {
+    paddingRight: '50%',
+  },
   page: {
     width: '100%',
     flex: 1,
-    // borderTopRightRadius: 40,
-    // borderTopLeftRadius: 40,
     backgroundColor: 'white',
   },
   openButton: {
@@ -81,13 +79,31 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: 'black',
-    marginTop: 10, // Adjust as needed
-    // borderWidth: 3,
-},
-pointsCard: {
-    //   borderWidth: 3,
-    fontSize: 15,
-    marginTop: 10, // Adjust as needed
+    marginTop: 10,
+  },
+  pointsCard: {
+      fontSize: 15,
+      marginTop: 10,
+  },
+  noRestaurantsView: {
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: '25%',
+  },
+  noRestaurantsText: {
+    width: '85%',
+    top: '65%',
+    marginTop: '15%',
+    marginBottom: '10%',
+    textAlign: 'center',
+    fontSize: 18,
+    color: 'grey',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: '30%',
   },
 });
 

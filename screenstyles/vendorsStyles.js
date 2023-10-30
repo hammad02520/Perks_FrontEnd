@@ -7,13 +7,31 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start'
     },
+    topPart: {
+        height: '25%',
+        width: '100%',
+        marginBottom: '10%',
+    },
+    headerImage: {
+        height: '100%',
+    },
+    overlay: {
+        position: 'absolute',
+        height: '100%',
+        width: '100%',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    overlayContent: {
+        height: '100%',
+        width: '100%',
+    },
     titleText: {
-        fontSize: 22,
+        width: '100%',
+        top: '50%',
+        textAlign: 'center',
+        fontSize: 30,
         fontWeight: 'bold',
-        paddingLeft: '6%',
-        paddingRight: '10%',
-        marginTop: '10%',
-        marginBottom: '5%',
+        color: 'white',
     },
     openButton: {
         height: '10%',
@@ -55,16 +73,21 @@ const styles = StyleSheet.create({
         borderRadius: 45,
     },
     restaurantInfo: {
-        paddingTop: 10,
-        paddingStart: '8%',
+        paddingStart: '5%',
     },
     restaurantname: {
-        fontSize: 15,
+        fontSize: 17,
         fontWeight: 'bold',
         color: 'black',
     },
     pointsCard: {
         fontSize: 12,
+        marginTop: 5,
+    },
+    loadingContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
 });
 

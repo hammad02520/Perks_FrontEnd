@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {View, Text, TextInput, CommonActions, StyleSheet, Image, Modal, TouchableOpacity, Alert} from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { useNavigation } from '@react-navigation/native';
-import { logoSvgCode, profilepic, editicon, profileicon, phonecallicon, bookicon, calendericon, mailicon, globeicon, logoutIcon } from '../svgData/svgData'; // Import the SVG data
+import { logoSvgCode, profilepic, editicon, profileicon, phonecallicon, bookicon, calendericon, mailicon, globeicon, logoutIcon, HelpIcon } from '../svgData/svgData'; // Import the SVG data
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
 import styles from '../screenstyles/profileStyles';
@@ -12,7 +12,7 @@ import {usePerksContext} from "../context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ModalComponent = ({ isVisible, onClose, children }) => (
-  <Modal visible={isVisible} transparent={true} animationType="slide">
+  <Modal visible={isVisible} transparent={true} animationType="fade">
     <View style={styles.modalContainer}>
       <View style={styles.modalContent}>
         {children}
@@ -26,69 +26,18 @@ const ModalComponent = ({ isVisible, onClose, children }) => (
 
 const Profile = (props) => {
     const navigation = useNavigation();
-    const [isNameModalVisible, setIsNameModalVisible] = useState(false);
-    const [isNumberModalVisible, setIsNumberModalVisible] = useState(false);
-    const [isGenderModalVisible, setIsGenderModalVisible] = useState(false);
-    const [isDobModalVisible, setIsDobModalVisible] = useState(false);
-    const [isEmailModalVisible, setIsEmailModalVisible] = useState(false);
-    const [agreeFemale, setAgreeFemale] = useState(false); // for the checkbox
-    const [agreeMale, setAgreeMale] = useState(false); // for the checkbox
-    // const {firstName, lastName, email, phoneNumber} = props.route.params;
-    const {currentUser} = usePerksContext()
-    const [nameText, setNameText] = useState('');
-    const [numberText, setNumberText] = useState('');
-    const [genderText, setGenderText] = useState('');
-    // const [dobText, setDobText] = useState('');
-    const [emailText, setEmailText] = useState('');
+    const [agreeFemale, setAgreeFemale] = useState(false); 
+    const [agreeMale, setAgreeMale] = useState(false); 
+    const {currentUser} = usePerksContext();
     const [pickedImage, setPickedImage] = useState();
+    const [isAboutUsModalVisible, setAboutUsModalVisible] = useState(false);
 
-
-    const closeModal = () => {
-      setIsNameModalVisible(false);
-      setIsNumberModalVisible(false);
-      setIsGenderModalVisible(false);
-      setIsDobModalVisible(false);
-      setIsEmailModalVisible(false);
+    const openAboutUsModal = () => {
+      setAboutUsModalVisible(true);
     };
-
-    const openNameModal = () => {
-      setIsNameModalVisible(true);
-      setIsNumberModalVisible(false);
-      setIsGenderModalVisible(false);
-      setIsDobModalVisible(false);
-      setIsEmailModalVisible(false);
-    };
-
-    const openNumberModal = () => {
-      setIsNumberModalVisible(true);
-      setIsNameModalVisible(false);
-      setIsGenderModalVisible(false);
-      setIsDobModalVisible(false);
-      setIsEmailModalVisible(false);
-    };
-
-    const openGenderModal = () => {
-      setIsGenderModalVisible(true);
-      setIsNameModalVisible(false);
-      setIsNumberModalVisible(false);
-      setIsDobModalVisible(false);
-      setIsEmailModalVisible(false);
-    };
-
-    const openDobModal = () => {
-      setIsDobModalVisible(true);
-      setIsNameModalVisible(false);
-      setIsNumberModalVisible(false);
-      setIsGenderModalVisible(false);
-      setIsEmailModalVisible(false);
-    };
-
-    const openEmailModal = () => {
-      setIsEmailModalVisible(true);
-      setIsNameModalVisible(false);
-      setIsNumberModalVisible(false);
-      setIsGenderModalVisible(false);
-      setIsDobModalVisible(false);
+  
+    const closeAboutUsModal = () => {
+      setAboutUsModalVisible(false);
     };
 
     const handlePhoneNumberChange = (text) => {
@@ -181,147 +130,58 @@ const Profile = (props) => {
           </View>
         </View>
       </View>
-      <View style={styles.trying}>
+      <View style={styles.infocontainer}>
             {/* Your profile content goes here */}
-            <Text style={styles.titleText}>Settings for Profile</Text>
+            <View style={styles.profileTextAndEditIcon}>
+              <Text style={styles.titleText}>Profile Page</Text>
+              <TouchableOpacity onPress={() => {
+                    navigation.navigate("EditProfile");
+                  }}>
+                  <SvgXml xml={editicon} style={styles.editIcon} />
+              </TouchableOpacity>
+            </View>
+
             {/* Rectangle containers */}
             <View style={styles.rectangleContainer}>
                 <SvgXml xml={profileicon} style={styles.profileIcon} />
                 <Text style={styles.profileTextCenter}>{currentUser?.fname} {currentUser?.lname}</Text>
-                <TouchableOpacity onPress={openNameModal}>
-                    <SvgXml xml={editicon} style={styles.editIcon} />
-                </TouchableOpacity>
             </View>
             <View style={[styles.rectangleContainer]}>
                 <SvgXml xml={phonecallicon} style={styles.profileIcon} />
                 <Text style={styles.profileTextCenter}>{currentUser.phone_number}</Text>
-                <TouchableOpacity onPress={openNumberModal}>
-                    <SvgXml xml={editicon} style={styles.editIcon} />
-                </TouchableOpacity>
             </View>
             <View style={[styles.rectangleContainer]}>
                 <SvgXml xml={profileicon} style={styles.profileIcon} />
                 <Text style={styles.profileTextCenter}>Gender</Text>
-                <TouchableOpacity onPress={openGenderModal}>
-                    <SvgXml xml={editicon} style={styles.editIcon} />
-                </TouchableOpacity>
             </View>
             <View style={[styles.rectangleContainer]}>
                 <SvgXml xml={calendericon} style={styles.profileIcon} />
                 <Text style={styles.profileTextCenter}>Date of birth</Text>
-                <TouchableOpacity onPress={onOpenDatePicker}>
-                    <SvgXml xml={editicon} style={styles.editIcon} />
-                </TouchableOpacity>
-                {isDatePickerOpen && (
-                  <DateTimePicker
-                    value={new Date()}
-                    onChange={onDateChange}
-                    mode="date"
-                    onClose={onCloseDatePicker}
-                  />
-                )}
             </View>
             <View style={[styles.rectangleContainer]}>
                 <SvgXml xml={mailicon} style={styles.profileIcon} />
                 <Text style={styles.profileTextCenter}>Email</Text>
-                <TouchableOpacity onPress={openEmailModal}>
-                    <SvgXml xml={editicon} style={styles.editIcon} />
-                </TouchableOpacity>
             </View>
-            <View style={[styles.rectangleContainer]}>
-                <SvgXml xml={globeicon} style={styles.profileIcon} />
-                <Text style={styles.profileTextCenter}>Language</Text>
-                <Text style= {styles.defaultText}>(English)</Text>
-                {/* <TouchableOpacity>
-                    <SvgXml xml={editicon} style={styles.editIcon} />
-                </TouchableOpacity> */}
+            
+            <TouchableOpacity onPress={openAboutUsModal}>
+              <View style={[styles.Helpdesk]}>
+                <SvgXml xml={HelpIcon} style={styles.profileIcon} />
+                <Text style={styles.profileTextCenter}>Help Desk</Text>
             </View>
-
-            {/* Modal */}
-
-            <ModalComponent isVisible={isNameModalVisible} onClose={closeModal}>
-              <TextInput
-                style={styles.modalTextInput}
-                multiline
-                placeholder="Enter your new username"
-                value={nameText}
-                onChangeText={setNameText}
-              />
-            </ModalComponent>
-
-            <ModalComponent isVisible={isNumberModalVisible} onClose={closeModal}>
-              <TextInput
-                placeholder="Enter your new phone number"
-                keyboardType="phone-pad" // This keyboard type only allows numeric input
-                value={numberText}
-                onChangeText={handlePhoneNumberChange}
-                maxLength={10} // Limit input to 10 characters
-                style={styles.modalTextInput}
-              />
-            </ModalComponent>
-
-            <ModalComponent isVisible={isGenderModalVisible} onClose={closeModal}>
-            <Text style={styles.modalTitle}>Select your gender</Text>
-              <View style={styles.genderOptions}>
-              <CheckBox
-                value={agreeFemale}
-                onValueChange={() => {
-                  setAgreeFemale(!agreeFemale);
-                  setAgreeMale(agreeMale ? !agreeMale : null);
-                  setGenderText('Female'); // Update gender text on selection
-                }}
-                color={agreeFemale ? '#4630EB' : undefined}
-              />
-                <Text style={styles.genderOption}>Female</Text>
-
-                <CheckBox
-                  value={agreeMale}
-                  onValueChange={() => {
-                    setAgreeMale(!agreeMale);
-                    setAgreeFemale(agreeFemale ? !agreeFemale : null);
-                    setGenderText('Male'); // Update gender text on selection
-                  }}
-                  color={agreeMale ? '#4630EB' : undefined}
-                />
-                <Text style={styles.genderOption}>Male</Text>
-              </View>
-            </ModalComponent>
-
-            {/* <ModalComponent isVisible={isDobModalVisible} onClose={closeModal}> */}
-              {/* <DateTimePicker
-                value={new Date()}
-                onChange={onDateChange}
-                mode="date"
-              /> */}
-              {/* <DatePicker
-                style={{ width: 200 }}
-                date={dobText}
-                mode="date"
-                placeholder="Select date"
-                format="YYYY-MM-DD"
-                confirmBtnText="Confirm"
-                cancelBtnText="Cancel"
-                onDateChange={setDobText}
-              /> */}
-              {/* <Text>Selected Date: {date.toLocaleString()}</Text>
-            </ModalComponent> */}
-
-            <ModalComponent isVisible={isEmailModalVisible} onClose={closeModal}>
-              <TextInput
-                style={styles.modalTextInput}
-                multiline
-                placeholder="Enter your new email"
-                value={emailText}
-                onChangeText={setEmailText}
-              />
-            </ModalComponent>
-
+            </TouchableOpacity>
             <TouchableOpacity onPress={handleLogout} style={[styles.logoutButton]}>
               {/* Logout button */}
               <SvgXml xml={logoutIcon} />
               <Text style={styles.logoutButtonText}>LOGOUT</Text>
             </TouchableOpacity>
       </View>
+      <ModalComponent isVisible={isAboutUsModalVisible} onClose={closeAboutUsModal}>
+        <Text style={styles.modalTitle}>Hassan Liana</Text>
+        <Text style={styles.modalText}>+255785679111</Text>
+        <Text style={styles.modalTitle}>Anen Isaac</Text>
+        <Text style={styles.modalText}>+255763860354</Text>
+        {/* You can add any content you want for the About Us modal */}
+      </ModalComponent>
 
     </SafeAreaView>
 

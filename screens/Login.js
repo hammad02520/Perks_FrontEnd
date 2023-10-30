@@ -88,7 +88,7 @@ export default function Login(){
                 <Text style={styles.loginText}>Login</Text>
 
                 <TextInput
-                    placeholder="Phone number"
+                    placeholder="Phone Number: 255*********"
                     keyboardType="phone-pad"
                     value={phone_number}
                     onChangeText={setphone_number}
@@ -115,7 +115,6 @@ export default function Login(){
                     </TouchableOpacity>
                 </View>
 
-                <Text style={styles.forgotPwordText}>Forgot Password?</Text>
                 {isLoading ? (
                     <ActivityIndicator size = "large" color = "#0000ff" />
                 ) : (

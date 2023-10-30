@@ -1,2 +1,2 @@
-export const BaseUrl = "http://192.168.64.123:8000"
+export const BaseUrl = "https://perks.lifewithkarim.me"
 //https://perks.lifewithkarim.me

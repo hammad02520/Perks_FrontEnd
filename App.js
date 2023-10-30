@@ -12,7 +12,9 @@ import Login from './screens/Login';
 import SignUp from './screens/SignUp';
 import Welcome from './screens/Welcome';
 import Rewards from './screens/Rewards';
+import SVRewards from './screens/SVRewards';
 import Profile from './screens/Profile';
+import EditProfile from './screens/EditProfile';
 import SpecificVendor from './screens/SpecificVendor'
 import AllRestaurants from './screens/AllRestaurants';
 import RedeemedRewards from "./screens/RedeemedRewards";
@@ -30,6 +32,15 @@ function SpecificVendorComponent() {
         options={{
           headerTitle: '',
           headerTransparent: true,
+        }}
+      />
+      <SpecificVendorStack.Screen
+        name="SVRewards"
+        component={SVRewards}
+        options={{
+          headerTitle: '',
+          headerTransparent: true,
+          headerTintColor: 'white',
         }}
       />
     </SpecificVendorStack.Navigator>
@@ -145,11 +156,11 @@ export default function MainApp() {
           component={SpecificVendorComponent}
           options={{ headerShown: false }}
         />
-          <Stack.Screen
-              name="RedeemedRewards"
-              component={RedeemedRewards}
-              options={{ headerShown: false }}
-          />
+        <Stack.Screen
+          name="RedeemedRewards"
+          component={RedeemedRewards}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen
           name="AllRestaurants"
           component={AllRestaurants}
@@ -157,6 +168,15 @@ export default function MainApp() {
             headerTitle: '',
             headerTransparent: true,
             headerTintColor: 'white',
+          }}
+        />
+        <Stack.Screen
+          name="EditProfile"
+          component={EditProfile}
+          options={{
+            headerTitle: '',
+            headerTransparent: true,
+            // headerTintColor: 'white',
           }}
         />
       </Stack.Navigator>

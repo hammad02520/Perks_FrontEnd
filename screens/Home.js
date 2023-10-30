@@ -7,14 +7,14 @@ import {
   Image,
   TouchableOpacity,
   Modal,
-  Platform,
+  ActivityIndicator,
+  BackHandler,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Location from "expo-location";
 import styles from "../screenstyles/homeStyles";
-import { ScrollView } from "react-native-gesture-handler";
 import {usePerksContext} from "../context";
 import axios from "axios";
 import {BaseUrl} from "../api/BaseUrl";
@@ -33,6 +33,24 @@ export default function Home(props) {
   const {currentUser, userPointsUpdated} = usePerksContext()
 
   console.log(currentUser)
+
+  // exits the app when user goes back from home page
+  useEffect(() => {
+    const backAction = () => {
+      if (navigation.isFocused()) {
+        BackHandler.exitApp();
+        return true;
+      }
+      return false;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, [navigation]);
 
   useEffect(() => {
     async function loadRestaurants() {
@@ -153,114 +171,121 @@ export default function Home(props) {
               {greeting}, {currentUser?.fname} {currentUser?.lname}
             </Text>
           </View>
-          {/* <TouchableOpacity
-                        style={styles.profileIconContainer}
-                        onPress={() => {
-                            navigation.navigate('Profile'); // Navigate to the Profile screen
-                        }}
-                        >
-                        <SvgXml xml={profile} style={styles.logoImage} />
-                    </TouchableOpacity> */}
-          {loadingData? <Text style={styles.totalPointsText}>loading...</Text>: <Text style={styles.totalPoints}>{userRestaurantData[0]?.user?.total_lifetime_points}</Text>}
+
+          {loadingData? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="gold" />
+            </View>
+          )
+          : <Text style={styles.totalPoints}>{userRestaurantData[0]?.user?.total_lifetime_points}</Text>}
           <Text style={styles.totalPointsText}> Total Perks Points </Text>
         </ImageBackground>
       </View>
 
-      {/*//use the restaurants from the server in userRestaurantData*/}
-      {/* User's restaurants */}
-      <View style={styles.title}>
-        <Text style={styles.titleText}>Your Restaurants</Text>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("Vendors");
-          }}
-        >
-          <Text style={styles.viewAll}>View all</Text>
-        </TouchableOpacity>
-      </View>
 
-      <View style={styles.specialAlign}>
-        {visitedRestaurants?.length > 0 ? (
-            visitedRestaurants?.slice(0,3).map((item) => {
-              return   <TouchableOpacity
-                  key={item?.id}
-                  style={styles.openButton}
-                  activeOpacity={0.5}
+      {loadingData? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="blue" />
+            </View>
+          )
+          : <View style={styles.restaurantPage}>
+              {/*//use the restaurants from the server in userRestaurantData*/}
+              {/* User's restaurants */}
+              <View style={styles.title}>
+                <Text style={styles.titleText}>Your Restaurants</Text>
+                <TouchableOpacity
                   onPress={() => {
-                    navigation.navigate('SpecificVendorStack', { screen: 'SpecificVendor',
-                      params: {
-                        restraurant: item?.restraurant.name,
-                        restId: item?.restraurant.id,
-                      }
-                    });
+                    navigation.navigate("Vendors");
                   }}
-              >
-                <View style={styles.cardContainerCrave}>
-                  <Image
-                      resizeMode="contain"
-                      style={styles.shishiImg}
-                      source={{uri:BaseUrl+item?.restraurant?.pic}}
-                  />
-                  <View>
-                    <Text style={styles.restaurantname}>{item?.restraurant.name}</Text>
-                    <Text style={styles.pointsCard}>points: {item?.total_points}</Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            })
-        ) : (
-            <Text style={[styles.restaurantname, {color:"black"}]}>You haven't visited any restaurant yet</Text>
-        )}
+                >
+                  <Text style={styles.viewAll}>View all</Text>
+                </TouchableOpacity>
+              </View>
 
-      </View>
+              <View style={styles.specialAlign}>
+                {visitedRestaurants?.length > 0 ? (
+                    visitedRestaurants?.slice(0,3).map((item) => {
+                      return   <TouchableOpacity
+                          key={item?.id}
+                          style={styles.openButton}
+                          activeOpacity={0.5}
+                          onPress={() => {
+                            navigation.navigate('SpecificVendorStack', { screen: 'SpecificVendor',
+                              params: {
+                                restraurant: item?.restraurant.name,
+                                restId: item?.restraurant.id,
+                              }
+                            });
+                          }}
+                      >
+                        <View style={styles.cardContainerCrave}>
+                          <Image
+                              resizeMode="contain"
+                              style={styles.shishiImg}
+                              source={{uri:BaseUrl+item?.restraurant?.pic}}
+                          />
+                          <View>
+                            <Text style={styles.restaurantname}>{item?.restraurant.name}</Text>
+                            <Text style={styles.pointsCard}>points: {item?.total_points}</Text>
+                          </View>
+                        </View>
+                      </TouchableOpacity>
+                    })
+                ) : (
+                    <Text style={[styles.restaurantname, {color:"black"}]}>You haven't visited any restaurant yet</Text>
+                )}
 
-      {/* All restaurants in our system */}
-      <View style={styles.title}>
-        <Text style={styles.titleText}>All Restaurants</Text>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("AllRestaurants");
-          }}
-        >
-          <Text style={styles.viewAll}>View all</Text>
-        </TouchableOpacity>
-      </View>
+              </View>
 
-      <View style={styles.specialAlign}>
-
-        {unVisitedRestaurants?.length > 0 ? (
-            unVisitedRestaurants?.slice(0,3).map((item) => {
-              return   <TouchableOpacity
-                  key={item?.id}
-                  style={styles.openButton}
-                  activeOpacity={0.5}
+              {/* All restaurants in our system */}
+              <View style={styles.title}>
+                <Text style={styles.titleText}>All Restaurants</Text>
+                <TouchableOpacity
                   onPress={() => {
-                    navigation.navigate('SpecificVendorStack', { screen: 'SpecificVendor',
-                      params: {
-                        restraurant: item?.restraurant.name,
-                        restId: item?.restraurant.id,
-                      }
-                    });
+                    navigation.navigate("AllRestaurants");
                   }}
-              >
-                <View style={styles.cardContainerCrave}>
-                  <Image
-                      resizeMode="contain"
-                      style={styles.shishiImg}
-                      source={{uri:BaseUrl+item?.restraurant?.pic}}
-                  />
-                  <View>
-                    <Text style={styles.restaurantname}>{item?.restraurant.name}</Text>
-                    <Text style={styles.pointsCard}>points: {item?.total_points}</Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            })
-        ) : (
-            <Text style={[styles.restaurantname, {color:"black"}]}>No Restaurants</Text>
-        )}
+                >
+                  <Text style={styles.viewAll}>View all</Text>
+                </TouchableOpacity>
+              </View>
 
-      </View>
+              <View style={styles.specialAlign}>
+
+                {unVisitedRestaurants?.length > 0 ? (
+                    unVisitedRestaurants?.slice(0,3).map((item) => {
+                      return   <TouchableOpacity
+                          key={item?.id}
+                          style={styles.openButton}
+                          activeOpacity={0.5}
+                          onPress={() => {
+                            navigation.navigate('SpecificVendorStack', { screen: 'SpecificVendor',
+                              params: {
+                                restraurant: item?.restraurant.name,
+                                restId: item?.restraurant.id,
+                              }
+                            });
+                          }}
+                      >
+                        <View style={styles.cardContainerCrave}>
+                          <Image
+                              resizeMode="contain"
+                              style={styles.shishiImg}
+                              source={{uri:BaseUrl+item?.restraurant?.pic}}
+                          />
+                          <View>
+                            <Text style={styles.restaurantname}>{item?.restraurant.name}</Text>
+                            <Text style={styles.pointsCard}>points: {item?.total_points}</Text>
+                          </View>
+                        </View>
+                      </TouchableOpacity>
+                    })
+                ) : (
+                    <Text style={styles.emptyRestaurantsText}>No Restaurants</Text>
+                )}
+
+              </View>
+            </View>}
+
 
       {/* for the restaurant recommendations */}
       <TouchableOpacity style={styles.recommendButton} onPress={toggleModal}>

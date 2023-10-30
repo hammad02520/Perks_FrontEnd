@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, Image, TouchableOpacity, ScrollView, ImageBackground, ActivityIndicator } from 'react-native';
 import { logoSvgCode } from './Welcome'; // Adjust the path to match your file structure
 import { SvgXml } from 'react-native-svg';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -43,11 +43,20 @@ const Vendor = (props) => {
 
   return (
     <SafeAreaView style={[globalStyles.container, styles.container]}>
-
-{/* title depending on whether the user wants to see their restaurants or nearby restaurants */}
-      <Text style={styles.titleText} >All your restaurants</Text>
-      {/* or 'Restaurants near you' */}
-        {loadingData? <Text>Loading....</Text>:  restaurants?.length > 0 ? (
+        <View style={styles.topPart}>
+            <ImageBackground style={styles.headerImage} source={require('../assets/images/foodbackground.png')}>
+            {/* Dark overlay */}
+                <View style={styles.overlay} />
+                <View style={styles.overlayContent}>
+                    <Text style={styles.titleText}>All Your Restaurants</Text>
+                </View>
+            </ImageBackground>
+        </View>
+        {loadingData ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="larger" color="#132D7B" />
+            </View>
+          ) :  restaurants?.length > 0 ? (
             restaurants?.map((item) => {
                 return   <TouchableOpacity
                     key={item?.id}
@@ -72,91 +81,6 @@ const Vendor = (props) => {
         ) : (
             <Text style={[styles.restaurantname, {color:"black"}]}>No Restaurants</Text>
         )}
-
-{/* restaurants pulled from database depending on request */}
-{/*    <TouchableOpacity*/}
-{/*        style={styles.openButton}*/}
-{/*        activeOpacity={0.5}*/}
-{/*        onPress={() => {*/}
-{/*            navigation.navigate('SpecificVendorStack', {screen: 'SpecificVendor'})*/}
-{/*        }}*/}
-{/*    >*/}
-{/*        <Image resizeMode="stretch" style={styles.shawarmaImg} source={require('../assets/images/shawarma.jpg')}/>*/}
-{/*        <View style={styles.restaurantInfo}>*/}
-{/*            <Text style={styles.restaurantname}>Shawarma 27</Text>*/}
-{/*            <Text style={styles.pointsCard}>points: 100</Text>*/}
-{/*        </View>*/}
-{/*    </TouchableOpacity>*/}
-
-{/*    <TouchableOpacity*/}
-{/*        style={styles.openButton}*/}
-{/*        activeOpacity={0.5}*/}
-{/*        onPress={() => {*/}
-{/*            navigation.navigate('SpecificVendorStack', {screen: 'SpecificVendor'})*/}
-{/*        }}*/}
-{/*    >*/}
-{/*        <Image resizeMode="stretch" style={styles.shishiImg} source={require('../assets/images/shishi.jpg')}/>*/}
-{/*        <View style={styles.restaurantInfo}>*/}
-{/*            <Text style={styles.restaurantname}>Shishi</Text>*/}
-{/*            <Text style={styles.pointsCard}>points: 200</Text>*/}
-{/*        </View>*/}
-{/*    </TouchableOpacity>*/}
-
-{/*    <TouchableOpacity*/}
-{/*        style={styles.openButton}*/}
-{/*        activeOpacity={0.5}*/}
-{/*        onPress={() => {*/}
-{/*            navigation.navigate('SpecificVendorStack', {screen: 'SpecificVendor'})*/}
-{/*        }}*/}
-{/*    >*/}
-{/*        <Image resizeMode="stretch" style={styles.craveImg} source={require('../assets/images/crave.jpg')}/>*/}
-{/*        <View style={styles.restaurantInfo}>*/}
-{/*            <Text style={styles.restaurantname}>Crave</Text>*/}
-{/*            <Text style={styles.pointsCard}>points: 0</Text>*/}
-{/*        </View>*/}
-{/*    </TouchableOpacity>*/}
-
-{/*    <TouchableOpacity*/}
-{/*        style={styles.openButton}*/}
-{/*        activeOpacity={0.5}*/}
-{/*        onPress={() => {*/}
-{/*            navigation.navigate('SpecificVendorStack', {screen: 'SpecificVendor'})*/}
-{/*        }}*/}
-{/*    >*/}
-{/*        <Image resizeMode="stretch" style={styles.craveImg} source={require('../assets/images/crave.jpg')}/>*/}
-{/*        <View style={styles.restaurantInfo}>*/}
-{/*            <Text style={styles.restaurantname}>Crave</Text>*/}
-{/*            <Text style={styles.pointsCard}>points: 0</Text>*/}
-{/*        </View>*/}
-{/*    </TouchableOpacity>*/}
-{/*    <TouchableOpacity*/}
-{/*        style={styles.openButton}*/}
-{/*        activeOpacity={0.5}*/}
-{/*        onPress={() => {*/}
-{/*            navigation.navigate('SpecificVendorStack', {screen: 'SpecificVendor'})*/}
-{/*        }}*/}
-{/*    >*/}
-{/*        <Image resizeMode="stretch" style={styles.shawarmaImg} source={require('../assets/images/shawarma.jpg')}/>*/}
-{/*        <View style={styles.restaurantInfo}>*/}
-{/*            <Text style={styles.restaurantname}>Shawarma 27</Text>*/}
-{/*            <Text style={styles.pointsCard}>points: 100</Text>*/}
-{/*        </View>*/}
-{/*    </TouchableOpacity>*/}
-
-{/*    <TouchableOpacity*/}
-{/*        style={styles.openButton}*/}
-{/*        activeOpacity={0.5}*/}
-{/*        onPress={() => {*/}
-{/*            navigation.navigate('SpecificVendorStack', {screen: 'SpecificVendor'})*/}
-{/*        }}*/}
-{/*    >*/}
-{/*        <Image resizeMode="stretch" style={styles.shishiImg} source={require('../assets/images/shishi.jpg')}/>*/}
-{/*        <View style={styles.restaurantInfo}>*/}
-{/*            <Text style={styles.restaurantname}>Shishi</Text>*/}
-{/*            <Text style={styles.pointsCard}>points: 200</Text>*/}
-{/*        </View>*/}
-{/*    </TouchableOpacity>*/}
-
 
   </SafeAreaView>
   );

@@ -1,13 +1,18 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#fff",
-        alignItems: "center",
-        justifyContent: "flex-start",
-    },
-    topCard: {
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+  restaurantPage: {
+    width: '100%',
+    alignItems: "center",
+    height: '65%',
+  },
+  topCard: {
     width: "100%",
     height: "25%",
   },
@@ -18,30 +23,30 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
     overflow: "hidden",
-},
-topbar: {
+  },
+  topbar: {
     width: "100%",
     height: "60%",
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
     backgroundColor: "lightblue",
-},
-searchbar: {
+  },
+  searchbar: {
     width: "70%",
     backgroundColor: "blue",
     top: "70%",
     alignSelf: "center",
-},
-searchtext: {
+  },
+  searchtext: {
     color: "white",
     left: "10%",
-},
-greetingText: {
+  },
+  greetingText: {
     width: "100%",
     position: "absolute",
     top: "15%",
-},
-hiText: {
+  },
+  hiText: {
     width: "100%",
     textAlign: "center",
     color: "white",
@@ -49,26 +54,21 @@ hiText: {
     fontSize: 16,
   },
   name: {
-      color: "white",
-      fontSize: 15,
-    },
-// profileIconContainer: {
-//     position: 'absolute',
-//     top: '10%',
-//     right: 7,
-// },
-totalPoints: {
+    color: "white",
+    fontSize: 15,
+  },
+  totalPoints: {
     top: "35%",
     color: "gold",
     fontSize: 60,
     fontWeight: "500",
-},
-totalPointsText: {
+  },
+  totalPointsText: {
     top: "35%",
     color: "white",
     fontSize: 14,
-},
-title: {
+  },
+  title: {
     flexDirection: "row",
     alignItems: "flex-end",
     justifyContent: "space-between",
@@ -94,10 +94,9 @@ titleText: {
   specialAlign: {
     alignItems: "center",
     justifyContent: "space-evenly",
-    height: "20%",
+    height: 150,
     width: "90%",
     flexDirection: "row",
-    margin: 0,
     paddingBottom: 5,
     borderBottomWidth: 1,
     borderColor: "#D3D3D3",
@@ -155,6 +154,13 @@ titleText: {
     alignItems: "center",
     textAlign: "center",
   },
+  emptyRestaurantsText: {
+    width: '80%',
+    bottom: '4%',
+    fontSize: 15,
+    fontWeight: "500",
+    textAlign: "center",
+  },
   pointsCard: {
     fontSize: 12,
     color: "black",
@@ -171,7 +177,7 @@ titleText: {
     height: "5.5%",
     backgroundColor: "#1A6F9E",
     borderRadius: 10,
-    marginTop: "7%",
+    // marginTop: "7%",
   },
   recommendText: {
     color: "white",
@@ -222,8 +228,6 @@ titleText: {
   },
   locationContainer: {
     width: "100%",
-    // flexDirection: 'row',
-    // justifyContent: 'space-between',
     alignItems: "center",
     marginVertical: 20,
   },
@@ -253,6 +257,11 @@ titleText: {
     marginHorizontal: "1%",
     padding: 5,
   },
+  loadingContainer: {
+    // top: '35%',
+    marginVertical: '56%',
+  },
+
 });
 
 export default styles;

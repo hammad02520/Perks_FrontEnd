@@ -72,7 +72,7 @@ export default function SignUp() {
           <View style={styles.logoImg}>
             <SvgXml xml={logoSvgCode} width="100%" height="100%" />
           </View>
-          <Text style={styles.nameText}>Perks</Text>
+          <Text style={styles.nameText}>erks</Text>
         </View>
 
         <Text>Earn your money back with us</Text>
@@ -94,14 +94,14 @@ export default function SignUp() {
           />
         </View>
         <TextInput
-          placeholder="Phone number"
+          placeholder="Phone number: 255*********"
           keyboardType="phone-pad"
           value={phoneNumber}  // Value is set to phoneNumber state
           onChangeText={setPhoneNumber}  // Updates phoneNumber state
           style={styles.input}
         />
         <TextInput
-          placeholder="Email"
+          placeholder="Email: JohnDoe@gmail.com"
           keyboardType="email-address"
           value={email}
           onChangeText={setEmail}
@@ -110,7 +110,7 @@ export default function SignUp() {
 
         <View style={styles.passwordInputContainer}>
           <TextInput
-            placeholder="Password"
+            placeholder="Password (minimum 6 characters)"
             secureTextEntry={!passwordVisible}
             value={password}
             onChangeText={setPassword}

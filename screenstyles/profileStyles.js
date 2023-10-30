@@ -4,29 +4,23 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       alignItems: 'center',
-    },
-
-    // ???????????????????????????????????????
-    christmasImage: {
-      width: '15%',
-      height: '15%',
-      paddingTop: 50,
+      backgroundColor: 'white',
     },
     backgroundContainer: {
-      flex: 0.3, // Set to 35% of the container's height
+      flex: 0.3, 
       width: '100%',
-      position: 'relative', // Necessary for absolute positioning of child elements
+      position: 'relative',
     },
     backgroundImage: {
       width: '100%',
-      height: '95%',
+      height: '100%',
       resizeMode: 'cover',
-      borderBottomLeftRadius: 20, // Adjust the radius as needed
-      borderBottomRightRadius: 20, // Adjust the radius as needed
+      borderBottomLeftRadius: 30, 
+      borderBottomRightRadius: 30, 
     },
     logoImage: {
       position: 'absolute',
-      top: '25%',
+      top: '30%',
       left: '53%', 
       transform: [{ translateX: -25 }, { translateY: -25 }],
       width: 50, 
@@ -73,7 +67,10 @@ const styles = StyleSheet.create({
       fontSize: 28,
       fontWeight: 'bold',
       color: '#132D7B',
-      marginBottom: '3%',
+      alignSelf: 'center',
+      marginTop: 10,
+      marginBottom: 10,
+      textDecorationLine: 'underline',
     },
     rectangleContainer: {
       flexDirection: 'row',
@@ -112,16 +109,26 @@ const styles = StyleSheet.create({
       right: 30,
     },
     mt20: {
-      marginTop: 5, // Increase the top margin
+      marginTop: 5,
     },
-    trying: {
-      flex: 0.7,
+    infocontainer: {
+      flex: 0.8,
+      width: '100%',
+      backgroundColor: 'white',
+    },
+    profileTextAndEditIcon: {
+      width: '90%',
+      flexDirection: 'row',
+      alignItems: 'center',
+      alignSelf: 'center',
+      justifyContent: 'space-between',
+      marginTop: '5%',
     },
     modalContainer: {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: 'rgba(0, 0, 0, 0.7)', // Semi-transparent background
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
     },
     modalContent: {
       backgroundColor: 'white',
@@ -130,8 +137,11 @@ const styles = StyleSheet.create({
       alignItems: 'center',
     },
     modalTitle: {
-      fontSize: 18,
-      marginBottom: 20,
+      fontSize: 23,
+      marginBottom: 5,
+    },
+    modalText: {
+      marginBottom: 10,
     },
     modalTextInput: {
       fontSize: 15,
@@ -156,23 +166,36 @@ const styles = StyleSheet.create({
       width: '100%',
       flexDirection: 'row',
     },
+    Helpdesk: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      backgroundColor: 'white',
+      paddingHorizontal: 20,
+      paddingVertical: 12,
+      marginTop: 30,
+      borderRadius: 10,
+      width: '90%',
+      alignSelf: 'center',
+      borderTopWidth: 1,
+    },
     logoutButton: {
       flexDirection: 'row',
-      backgroundColor: '#02113F', // Customize the button's appearance
-      marginTop: 50, // Adjust the margin as needed
+      backgroundColor: 'white',
+      marginTop: 0,
+      marginLeft: 20,
       borderRadius: 15,
-      alignItems: 'center',
-      justifyContent: 'space-evenly',
-      alignSelf: 'center',
-      paddingVertical: 10,
-      paddingHorizontal: 30,
-      width: '50%',
+      alignSelf: 'flex-start',
+      paddingVertical: 12,
+      paddingHorizontal: 20,
+      width: 350,
     },
     logoutButtonText: {
-      color: 'white',
+      color: 'red',
       fontSize: 18,
       fontWeight: '500',
       letterSpacing: 1,
+      paddingLeft: 20,
     },
   });
 

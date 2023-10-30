@@ -81,8 +81,15 @@ export const profile = `
 `;
 export const logoutIcon = `
 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M16 17L21 12L16 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M21 12H9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9" stroke="red" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 17L21 12L16 7" stroke="red" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M21 12H9" stroke="red" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+`;
+export const HelpIcon = `
+<svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M12.4626 22.8226C17.9855 22.8226 22.4626 18.3455 22.4626 12.8226C22.4626 7.29978 17.9855 2.82263 12.4626 2.82263C6.9398 2.82263 2.46265 7.29978 2.46265 12.8226C2.46265 18.3455 6.9398 22.8226 12.4626 22.8226Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M9.55273 9.82265C9.78784 9.15432 10.2519 8.59076 10.8627 8.23178C11.4735 7.87281 12.1916 7.74159 12.8899 7.86136C13.5882 7.98114 14.2216 8.34418 14.6778 8.88618C15.1341 9.42818 15.3838 10.1142 15.3827 10.8227C15.3827 12.8227 12.3827 13.8227 12.3827 13.8227" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M12.4626 17.8226H12.4726" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
 `;

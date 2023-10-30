@@ -38,12 +38,13 @@ const RewardItem = ({ item, currentrdId }) => {
             </View>
             <View style={styles.textContainer}>
                 <Text style={styles.text}>{item?.award.product}</Text>
-                <Text style={styles.additionalText}>You only spent {item?.award.points} points</Text>
+                {/* <Text style={styles.codestl}>You only spent {item?.award.points} points</Text> */}
+                <Text style={styles.codestl}>Your code is: <Text style={styles.codestyles}>{item?.award_code}</Text> </Text>
 
             </View>
 
                 <TouchableOpacity style={globalStyles.getAndRedeemButton} >
-                    <Text style={globalStyles.getAndRedeemReward}>Code: {item?.award_code}</Text>
+                    <Text style={globalStyles.getAndRedeemReward}>Timer inshallah</Text>
                 </TouchableOpacity>
 
         </View>

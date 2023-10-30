@@ -1,18 +1,18 @@
 import { StyleSheet } from 'react-native';
-
 const styles = StyleSheet.create({
     container: {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: 'white',
+      backgroundColor: '#132D7B',
     },
     background: {
-      backgroundColor: 'white',
-      width: '80%', // Adjust the width of the white background (camera)
+      backgroundColor: '#132D7B',
+      width: '90%',
+      height: '85%',
       justifyContent: 'center',
-      alignItems: 'center',
-      borderRadius: 10,
+      // alignItems: 'center',
+      borderRadius: 20,
       position: 'relative',
     },
     statusText: {
@@ -20,36 +20,59 @@ const styles = StyleSheet.create({
     },
     overlay: {
       width: '100%',
-      height: '40%',
+      height: '10%',
       alignItems: 'center',
       paddingTop: '15%',
       paddingHorizontal: 30,
-      backgroundColor: 'white',
+      backgroundColor: '#132D7B',
+      // backgroundColor: 'red',
       ...StyleSheet.absoluteFillObject,
     },
     scanText: {
-      fontSize: 30,
+      fontSize: 40,
       fontWeight: '500',
-      marginBottom: 20,
+      marginBottom: 10,
+      color: '#132D7B',
     },
     explanationText: {
       fontSize: 14,
       fontWeight: '400',
+      color: '#132D7B',
       marginHorizontal: 10,
       textAlign: 'center',
     },
     header: {
-      backgroundColor: "#DBF3FA",
+      backgroundColor: "white",
       alignItems: "center",
-      paddingHorizontal: 60,
-      paddingVertical: 20,
-      marginTop: 40,
+      position: 'absolute',
+      paddingHorizontal: '10%',
+      paddingVertical: 10,
+      marginTop: '20%',
       borderRadius: 10,
     },
     barcodeScanner: {
       width: '100%',
-      height: '100%',
+      height: '90%',
     },
+    loadingContainer: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginVertical: '70%',
+    },
+    tapToScan: {
+      marginTop: 0,
+      backgroundColor: '#ADD8E6',
+      top: '85%',
+      alignSelf: 'center',
+      paddingVertical: 10,
+      paddingHorizontal: 30,
+      borderRadius: 20,
+      position: 'absolute',
+    },
+    tapToScanText: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      color: '#132D7B',
+    }
   });
-
 export default styles;

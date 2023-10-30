@@ -16,35 +16,8 @@ const commonRectangleStyles = {
     container: {
       flex: 1,
       backgroundColor: '#fff',
-      alignItems: 'center',
       justifyContent: 'flex-start',
-    },
-    borderradiusforimage:{
-      borderradius: '20%',
-      borderWidth: 1,
-      borderColor: '#bebebe',
-    },
-    image: {
-      width: 70,
-      height: 60,
-      resizeMode: 'contain',
-      backgroundColor: '#D5FFFF',
-    },
-    codestyles: {
-      color: 'green',
-      fontWeight: 'bold',
-    },
-    getAndRedeemButton: {
-      backgroundColor: '#02113F',
-      borderRadius: 10,
-      textAlign: 'center',
-      paddingHorizontal: 15,
-      paddingVertical: 5,
-      marginLeft: 10,
-    },
-    getAndRedeemReward: {
-      fontSize: 13,
-      color: 'white',
+      alignItems: 'center',
     },
     topPart: {
       height: '25%',
@@ -73,12 +46,26 @@ const commonRectangleStyles = {
       fontWeight: 'bold',
       color: 'white',
     },
+    restaurantText: {
+      width: '85%',
+      fontSize: 22,
+      fontWeight: "bold", 
+      marginTop: 40,
+      marginBottom: 10,
+    },
+    noRewardsView: {
+      width: '100%',
+      alignItems: 'center',
+      marginBottom: '25%',
+    },
     noRewardsText: {
-      marginTop: '40%',
-      fontSize: 18,
-      width: '90%',
+      width: '77%',
+      top: '65%',
+      marginTop: '15%',
+      marginBottom: '10%',
       textAlign: 'center',
-      paddingHorizontal: 15,
+      fontSize: 18,
+      color: 'grey',
     },
     rectangleAndroid: {
       ...commonRectangleStyles,
@@ -91,11 +78,16 @@ const commonRectangleStyles = {
       shadowOpacity: 0.3,
       shadowRadius: 2,
     },
-    rectangleAndroidRedeemed: {
-      backgroundColor: 'red',
+    borderRadiusForImage:{
+      borderradius: '20%',
+      borderWidth: 1,
+      borderColor: '#bebebe',
     },
-    rectangleIOSRedeemed: {
-      backgroundColor: 'red',
+    image: {
+      width: 70,
+      height: 60,
+      resizeMode: 'contain',
+      backgroundColor: '#D5FFFF',
     },
     textContainer: {
       flex: 1,
@@ -108,6 +100,19 @@ const commonRectangleStyles = {
     },
     additionalText: {
       fontSize: 14,
+    },
+    redeemButton: {
+        backgroundColor: '#02113F',
+        borderRadius: 10,
+        textAlign: 'center',
+      //   padding: 7,
+      paddingHorizontal: 15,
+      paddingVertical: 5,
+        marginLeft: 10,
+    },
+    redeemReward: {
+        fontSize: 13,
+        color: 'white',
     },
     // Modal styles
     modalContainer: {
@@ -122,67 +127,38 @@ const commonRectangleStyles = {
       padding: 20,
       alignItems: 'center',
     },
-    circle: {
-      width: 150,
-      height: 150,
-      borderRadius: 100,
-      backgroundColor: '#02113F',
-      justifyContent: 'center',
-      top: 5,
-    },
-    modalimage:{
-      width: 130,
-      height: 130,
-      resizeMode: 'contain',
-      alignSelf: 'center',
-    },
-    outlinedTextContainer: {
-      position: 'relative',
-      alignItems: 'center',
-    },
-    modalTextTitle: {
-      fontSize: 25,
-      color: 'gold',
-      fontWeight: 'bold',
-      position: 'absolute',
-      textAlign: 'center',
-      marginTop: 10,
-    },
-    overlay: {
-      color: '#808080',
-      top: 2,
-    },
     modalText: {
       fontSize: 18,
       marginBottom: 20,
       textAlign: 'center',
-      marginTop: 60,
-      marginHorizontal: 10,
-      fontWeight: '400',
-    },
-    modalnumber: {
-      fontSize: 18,
-      marginBottom: 20,
-      textAlign: 'center',
-      color: 'green',
-      fontWeight: 'bold'
     },
     buttonContainer: {
       flexDirection: 'row',
       justifyContent: 'space-between', // Arrange buttons side by side
     },
     modalButton: {
+      backgroundColor: '#D62828',
+      paddingHorizontal: 20,
+      paddingVertical: 10,
+      borderRadius: 5,
+      marginRight: 30,
+    },
+    modalButton2: {
       backgroundColor: 'green',
-      paddingHorizontal: 40,
-      paddingVertical: 8,
+      paddingHorizontal: 20,
+      paddingVertical: 10,
       borderRadius: 5,
     },
     modalButtonText: {
-      fontSize: 20,
+      fontSize: 16,
       fontWeight: '500',
-      color: 'white',
     },
-
+    title: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      marginLeft: 20,
+      marginTop: 20,
+    },
     recommendButton: {
       flexDirection: "row",
       justifyContent: "space-evenly",
@@ -196,9 +172,6 @@ const commonRectangleStyles = {
     recommendText: {
       color: "white",
       fontSize: 13,
-    },
-    loadingContainer: {
-      marginBottom: 20,
     },
   });
 

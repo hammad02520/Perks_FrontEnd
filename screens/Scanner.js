@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Alert } from 'react-native';
+import { Text, View, ActivityIndicator, Alert, TouchableOpacity } from 'react-native';
 import {Button} from "@rneui/themed";
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { useNavigation, useFocusEffect  } from '@react-navigation/native';
@@ -7,24 +7,23 @@ import styles from '../screenstyles/scannerStyles';
 import { usePerksContext } from '../context';
 import axios from 'axios';
 import { BaseUrl } from '../api/BaseUrl';
-
-
 export default function App(message) {
   const navigation = useNavigation();
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { currentUser, setUserPointsUpdated, userPointsUpdated } = usePerksContext();
-
   useFocusEffect(
       React.useCallback(() => {
         // This function is called when the screen comes into focus
-        setScanned(false);
-        return () => {
-          // Cleanup if necessary
-        };
+        console.log("focus");
+        setScanned(true);
+        if (userPointsUpdated === true){
+          setUserPointsUpdated(false);
+          setScanned(false);
+        }
       }, [])
   );
-
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
@@ -34,15 +33,15 @@ export default function App(message) {
   }, []);
 
   const handleBarCodeScanned = async ({ type, data }) => {
-
+    console.log(data)
     setScanned(true);
-
     if (!currentUser) {
       alert('Please log in to record transactions.');
-      setScanned(false); // Allow scanning again after the alert
+      setScanned(false); 
       return;
     }
     try {
+      setLoading(true);
       const response = await axios.get(
           `${BaseUrl}/api/coupon?querytype=single&coupon=${data}`,
           {
@@ -53,7 +52,6 @@ export default function App(message) {
       );
       let points = parseFloat(response.data?.start_amount) / 2000
       console.log(points)
-
       const pointsRsp =  await  axios.post(
           `${BaseUrl}/api/user-restraurant`,
           {
@@ -64,7 +62,6 @@ export default function App(message) {
           }
       )
       console.log(pointsRsp.data)
-
       if (pointsRsp.data) {
         navigation.navigate('SpecificVendorStack', {screen: 'SpecificVendor',
           params: {
@@ -83,45 +80,53 @@ export default function App(message) {
             },
           },
         ]);
-        setScanned(false);
       }
-
     } catch (err) {
       alert('An error occurred:', err.message);
-      setScanned(false); // Allow scanning again after the alert
+      setScanned(false); 
+    } finally {
+      setLoading(false);
     }
   };
-
-
+  const handlefalse = () => {
+    setScanned(false);
+  };
   if (hasPermission === null) {
     return <Text style={styles.statusText}>Requesting camera permission</Text>;
   }
   if (hasPermission === false) {
     return <Text style={styles.statusText}>No access to camera</Text>;
   }
-
   return (
       <View style={styles.container}>
         <View style={styles.background}>
-
-          <BarCodeScanner
-              onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+          {hasPermission && !scanned && (
+            <BarCodeScanner
+              onBarCodeScanned={handleBarCodeScanned}
               style={styles.barcodeScanner}
-          />
-        </View>
+            />
+          )}
+          {loading && (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="larger" color="#fff" />
+            </View>
+          )}
 
+          {scanned === true && (
+            <TouchableOpacity style={styles.tapToScan} onPress={() => handlefalse()}>
+              <Text style={styles.tapToScanText}>Tap to scan</Text>
+            </TouchableOpacity>
+          )}
+        </View>
         <View style={styles.overlay}>
           <View style={styles.header}>
             <Text style={styles.scanText}>Scan QR code</Text>
-            <Text style={styles.explanationText}>
-              Scan the Perks QR code to get your exclusive points back.
-            </Text>
-            <Button
-                style={{ marginTop: 10, borderRadius:15, padding:1, elevation:3}}
-                titleStyle={{ fontWeight:'bold' }}
-                title={'Tap to Scan'}
-                onPress={() => setScanned(true)}
-            />
+            <View>
+              <Text style={styles.explanationText}>
+                Scan the Perks QR code to get your exclusive points back.
+              </Text>
+            </View>
+            
           </View>
         </View>
       </View>

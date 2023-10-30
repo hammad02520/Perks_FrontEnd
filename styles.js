@@ -46,13 +46,13 @@ const globalStyles = StyleSheet.create({
             color: "#ECE1E1",
           },
           getAndRedeemButton: {
-              backgroundColor: '#02113F',
-              borderRadius: 10,
-              textAlign: 'center',
+            backgroundColor: '#02113F',
+            borderRadius: 10,
+            textAlign: 'center',
             //   padding: 7,
             paddingHorizontal: 15,
             paddingVertical: 5,
-              marginLeft: 10,
+            marginLeft: 10,
           },
           getAndRedeemReward: {
               fontSize: 13,

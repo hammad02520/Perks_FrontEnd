@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { View, Text, Image, TouchableOpacity, ImageBackground, ScrollView } from 'react-native';
+import { View, Text, Image, TouchableOpacity, ImageBackground, ScrollView, ActivityIndicator } from 'react-native';
 import { SearchBar } from '@rneui/themed';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {usePerksContext} from "../context";
 import axios from "axios";
 import {BaseUrl} from "../api/BaseUrl";
+import LottieView from 'lottie-react-native';
 
 const AllRestaurants = () => {
   const navigation = useNavigation();
@@ -99,34 +100,52 @@ const AllRestaurants = () => {
     </TouchableOpacity>
   );
 
+  const renderNoRestaurantsView = () => (
+    <View style={styles.noRestaurantsView}>
+      <Text style={styles.noRestaurantsText}>Oops! We don't seem to be working with this restaurant yet. Go back to the home page to add it as a recommendation. </Text>
+      <LottieView
+        source={require('../assets/animations/unavailableAnimation.json')}
+        autoPlay
+        loop
+      />
+    </View>
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.topPart}>
-            <ImageBackground style={styles.headerImage} source={require('../assets/images/foodbackground.png')}>
-            {/* Dark overlay */}
-                <View style={styles.overlay} />
-                <View style={styles.overlayContent}>
-                    <Text style={styles.titleText}>All Restaurants</Text>
-                </View>
-            </ImageBackground>
+        <ImageBackground style={styles.headerImage} source={require('../assets/images/foodbackground.png')}>
+        {/* Dark overlay */}
+            <View style={styles.overlay} />
+            <View style={styles.overlayContent}>
+                <Text style={styles.titleText}>All Restaurants</Text>
             </View>
-            <ScrollView style={styles.page}>
-              <SearchBar
-                placeholder="Search for restaurants..."
-                onChangeText={handleOnChangeText}
-                value={searchText}
-                searchIcon={<Icon name={"search"} size={24} color="#888"/>}
-                containerStyle={{ width: '100%', backgroundColor: 'rgba(0, 0, 0, 0)', borderBottomWidth: 0, borderTopWidth: 0, marginVertical: 10 }}
-                inputContainerStyle={{backgroundColor: 'rgba(0, 0, 0, 0)', borderBottomWidth: 1}}
-                placeholderTextColor={'#888'}
-                inputStyle={{ color: '#333'}}
-                // , marginVertical: 100
-              />
-                {loadingData? <Text>loading..</Text>: modalFilteredRestaurants?.length > 0
-                        ? modalFilteredRestaurants.map(renderRestaurant)
-                        : restaurantss?.map(renderRestaurant)
-                }
-            </ScrollView>
+        </ImageBackground>
+      </View>
+      <ScrollView style={styles.page}>
+        <SearchBar
+          placeholder="Search for restaurants..."
+          onChangeText={handleOnChangeText}
+          value={searchText}
+          searchIcon={<Icon name={"search"} size={24} color="#888"/>}
+          containerStyle={{ width: '100%', backgroundColor: 'rgba(0, 0, 0, 0)', borderBottomWidth: 0, borderTopWidth: 0, marginVertical: 10 }}
+          inputContainerStyle={{backgroundColor: 'rgba(0, 0, 0, 0)', borderBottomWidth: 1}}
+          placeholderTextColor={'#888'}
+          inputStyle={{ color: '#333'}}
+          // , marginVertical: 100
+        />
+          {loadingData ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="larger" color="#132D7B" />
+            </View>
+          ) : modalFilteredRestaurants?.length > 0 ? (
+            modalFilteredRestaurants.map(renderRestaurant)
+          ) : searchText !== '' ? ( // Check if user has entered a search text
+            renderNoRestaurantsView()
+          ) : (
+            restaurantss?.map(renderRestaurant)
+          )}
+      </ScrollView>
     </SafeAreaView>
   );
 };
