@@ -34,6 +34,13 @@ export default function Home(props) {
 
   console.log(currentUser)
 
+  const closeModal = () => {
+    setModalVisible(false);
+    // Reset recommendationText and locationText when the modal is closed
+    setRecommendationText("");
+    setLocationText("Your location");
+  };
+
   // exits the app when user goes back from home page
   useEffect(() => {
     const backAction = () => {
@@ -314,9 +321,14 @@ export default function Home(props) {
               </TouchableOpacity>
               <Text style={styles.coordinates}>{locationText}</Text>
             </View>
-            <TouchableOpacity style={styles.modalButton} onPress={submitRecommendation}>
-              <Text style={styles.modalButtonText}>Done</Text>
-            </TouchableOpacity>
+            <View style={styles.modalbuttonview}>
+              <TouchableOpacity style={styles.modalButton} onPress={closeModal}>
+                <Text style={styles.modalButtonText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.modalButton} onPress={submitRecommendation}>
+               <Text style={styles.modalButtonText}>Done</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>
