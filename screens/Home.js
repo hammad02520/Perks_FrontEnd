@@ -41,6 +41,14 @@ export default function Home(props) {
     setLocationText("Your location");
   };
 
+   function shuffleArray(array) {
+     for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
   // exits the app when user goes back from home page
   useEffect(() => {
     const backAction = () => {
@@ -73,14 +81,15 @@ export default function Home(props) {
         );
         const data = response.data
         const sortedRestaurants = data.sort((a, b) => b.total_points - a.total_points);
-        const unvistited = data.filter((rst) => rst.total_points === 0)
-
-
-        // Filter the top N restaurants with the highest points (e.g., top 5)
         const topRestaurants = sortedRestaurants.slice(0, 3);
-
-        setUnVisitedRestaurants(data?.slice(0, 3))
         setVisitedRestaurants(topRestaurants);
+
+
+        const shuffledUnvisited = shuffleArray(data);
+        const topUnvisitedRestaurants = shuffledUnvisited.slice(0, 3);
+
+
+        setUnVisitedRestaurants(topUnvisitedRestaurants)
         setUserRestaurantData(data);
         setLoadingData(false)
       }catch (e) {

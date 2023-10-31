@@ -10,6 +10,8 @@ import CheckBox from "expo-checkbox";
 import DateTimePicker from './../node_modules/@react-native-community/datetimepicker/src/datetimepicker';
 import {usePerksContext} from "../context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {Avatar} from "@rneui/themed";
+import {BaseUrl} from "../api/BaseUrl";
 
 const ModalComponent = ({ isVisible, onClose, children }) => (
   <Modal visible={isVisible} transparent={true} animationType="fade">
@@ -26,8 +28,8 @@ const ModalComponent = ({ isVisible, onClose, children }) => (
 
 const Profile = (props) => {
     const navigation = useNavigation();
-    const [agreeFemale, setAgreeFemale] = useState(false); 
-    const [agreeMale, setAgreeMale] = useState(false); 
+    const [agreeFemale, setAgreeFemale] = useState(false);
+    const [agreeMale, setAgreeMale] = useState(false);
     const {currentUser} = usePerksContext();
     const [pickedImage, setPickedImage] = useState();
     const [isAboutUsModalVisible, setAboutUsModalVisible] = useState(false);
@@ -35,7 +37,7 @@ const Profile = (props) => {
     const openAboutUsModal = () => {
       setAboutUsModalVisible(true);
     };
-  
+
     const closeAboutUsModal = () => {
       setAboutUsModalVisible(false);
     };
@@ -118,12 +120,20 @@ const Profile = (props) => {
         />
         <SvgXml xml={logoSvgCode} style={styles.logoImage} />
         <View style={styles.textContainer}>
+            {currentUser.profile ? (
+                    <Avatar
+                        size={52}
+                        rounded
+                        source={{uri:`${BaseUrl + currentUser?.profile}`}}
+                        // style={styles.profile}
+                    />
+
+            ):(
             <TouchableOpacity onPress={() => {
-                pickImage().then(r => {
-                    console.log("------")})
             }} style={styles.profile2}>
                   <SvgXml xml={profilepic} style={styles.profile} />
             </TouchableOpacity>
+            )}
           <View style={styles.profileText}>
             <Text style={styles.nameText}>{currentUser?.fname} {currentUser?.lname}</Text>
             <Text style={styles.emailText}>{currentUser?.email}</Text>
@@ -134,11 +144,13 @@ const Profile = (props) => {
             {/* Your profile content goes here */}
             <View style={styles.profileTextAndEditIcon}>
               <Text style={styles.titleText}>Profile Page</Text>
-              <TouchableOpacity onPress={() => {
-                    navigation.navigate("EditProfile");
-                  }}>
-                  <SvgXml xml={editicon} style={styles.editIcon} />
-              </TouchableOpacity>
+
+                    <TouchableOpacity onPress={() => {
+                        navigation.navigate("EditProfile");
+                    }}>
+                        <SvgXml xml={editicon} style={styles.editIcon} />
+                    </TouchableOpacity>
+
             </View>
 
             {/* Rectangle containers */}
@@ -162,7 +174,7 @@ const Profile = (props) => {
                 <SvgXml xml={mailicon} style={styles.profileIcon} />
                 <Text style={styles.profileTextCenter}>Email</Text>
             </View>
-            
+
             <TouchableOpacity onPress={openAboutUsModal}>
               <View style={[styles.Helpdesk]}>
                 <SvgXml xml={HelpIcon} style={styles.profileIcon} />
