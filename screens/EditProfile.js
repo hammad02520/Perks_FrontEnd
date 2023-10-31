@@ -18,7 +18,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import styles from '../screenstyles/editProfileStyles';
 import { usePerksContext } from '../context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Avatar} from "@rneui/themed";
+import {Avatar, Dialog} from "@rneui/themed";
 import axios from "axios";
 import {BaseUrl} from "../api/BaseUrl";
 
@@ -29,8 +29,9 @@ const EditProfile = ({navigation}) => {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [gender, setGender] = useState('');
     const [dob, setDob] = useState(new Date());
+    const {setCurrentUser} = usePerksContext();
     const [email, setEmail] = useState('');
-    const [isLoadind, setIsLoadind] = useState()
+    const [isLoadind, setIsLoadind] = useState(false)
 
 
     const getPermissionAsync = async () => {
@@ -70,18 +71,33 @@ const EditProfile = ({navigation}) => {
         }
     };
 
+    const prepareFormData = async () => {
+        const formData = new FormData();
+
+        // Add the profile picture to the FormData
+        formData.append('profile', {
+            uri: pickedImage,
+            type: 'image/jpeg',
+            name: 'profile.jpg',
+        });
+
+        formData.append('email', email);
+        formData.append('fname', firstName);
+        formData.append('lname', lastName);
+        formData.append('phone_number', phoneNumber);
+        formData.append('username', firstName);
+        formData.append('gender', gender);
+
+        return formData;
+    };
+
 
     const handleSave = async () => {
         try {
             setIsLoadind(true);
-            const response = await axios.post(`${BaseUrl}/api/auth/update-user`, {
-                email: email,
-                fname: firstName,
-                lname: lastName,
-                phone_number: phoneNumber,
-                username: firstName,
-                profile:pickedImage
-            }, {
+
+            const formData = await prepareFormData();
+            const response = await axios.post(`${BaseUrl}/api/auth/update-user`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     "X-CSRFToken": "{{ csrf_token }}"
@@ -89,10 +105,12 @@ const EditProfile = ({navigation}) => {
             });
 
             if (response.data.save === true) {
-                navigation.navigate('Home');
+                await AsyncStorage.setItem('user', JSON.stringify(response.data?.user));
+                setCurrentUser(response.data?.user)
+                navigation.navigate('Profile');
             } else {
-                console.error('Sign-up error:', response.data.errors);
-                Alert.alert('Sign-up Error', 'An error occurred while signing up.');
+                console.error('Update error:', response.data.errors);
+                Alert.alert('Update error:', 'An error occurred while update .');
             }
         } catch (err) {
             if (err.response) {
@@ -187,6 +205,13 @@ const EditProfile = ({navigation}) => {
                     <Text style={styles.saveButtonText}>Save</Text>
                 </TouchableOpacity>
             </View>
+            <Dialog
+                isVisible={isLoadind}
+            >
+                <Text style={{ fontFamily: "", fontSize: 10, textAlign: "center" }}>Editing Profile..</Text>
+                <Dialog.Loading
+                />
+            </Dialog>
         </ScrollView>
     );
 };

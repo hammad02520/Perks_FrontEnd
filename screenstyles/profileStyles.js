@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
       backgroundColor: 'white',
     },
     backgroundContainer: {
-      flex: 0.3, 
+      flex: 0.3,
       width: '100%',
       position: 'relative',
     },
@@ -15,25 +15,25 @@ const styles = StyleSheet.create({
       width: '100%',
       height: '100%',
       resizeMode: 'cover',
-      borderBottomLeftRadius: 30, 
-      borderBottomRightRadius: 30, 
+      borderBottomLeftRadius: 30,
+      borderBottomRightRadius: 30,
     },
     logoImage: {
       position: 'absolute',
       top: '30%',
-      left: '53%', 
+      left: '53%',
       transform: [{ translateX: -25 }, { translateY: -25 }],
-      width: 50, 
+      width: 50,
       height: 50,
       resizeMode: 'contain',
     },
     profile: {
       position: 'absolute',
       top: '2%',
-      left: '6%', 
-      width: '100%', 
-      height: '100%', 
-      resizeMode: 'contain', 
+      left: '6%',
+      // width: '100%',
+      // height: '100%',
+      resizeMode: 'contain',
     },
     profile2: {
       alignSelf: 'left',
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     textContainer: {
       position: 'absolute',
       top: '45%',
-      width: '100%', 
+      width: '100%',
       marginLeft: 100,
     },
     profileText: {
@@ -53,13 +53,13 @@ const styles = StyleSheet.create({
       fontSize: 25,
       fontWeight: 'bold',
       color: 'white',
-      textAlign: 'center', 
+      textAlign: 'center',
       left: '3%',
     },
     emailText: {
       fontSize: 13,
       color: 'white',
-      textAlign: 'center', 
+      textAlign: 'center',
       left: '3%',
     },
     titleText: {
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
       width: '90%',
       alignSelf: 'center',
     },
-    profileIcon: { 
+    profileIcon: {
       width: 30,
       height: 30,
     },
