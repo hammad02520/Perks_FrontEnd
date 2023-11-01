@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import { View, Text, StyleSheet, ImageBackground, Image, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
-import { logoSvgCode } from './Welcome'; // Adjust the path to match your file structure
+import { View, Text, ImageBackground, Image, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
+import { logoSvgCode } from './Welcome';
 import { SvgXml } from 'react-native-svg';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -52,15 +52,11 @@ const Vendor = (props) => {
      }
     }
 
-
     useEffect(() => {
         userRstDataLoad()
     }, []);
 
-
-
     const RewardCard = ({ title, points, imageSource, id, rest }) => {
-
         const handleGetReward = async () => {
             console.log(id)
             console.log(rest)
@@ -75,7 +71,6 @@ const Vendor = (props) => {
                         headers: {
                             'Content-Type': 'application/json'
                         }
-
                     });
                 setUserPointsUpdated(userPointsUpdated+1);
                 if (response.data.save){
@@ -147,7 +142,6 @@ const Vendor = (props) => {
                     { cancelable: true }
                 );
             }
-
         };
 
         return (

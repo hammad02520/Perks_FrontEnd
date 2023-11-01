@@ -1,16 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  Dimensions,
-  Image,
-  TouchableOpacity,
-  Platform,
-  Modal,
-  Alert,
-  ImageBackground,
-  ActivityIndicator,
-} from 'react-native';
+import { View, Text, Dimensions, Image, TouchableOpacity, Platform, Modal, ImageBackground, ActivityIndicator, } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styles from '../screenstyles/rewardStyles';
 import AsyncStorage from '@react-native-async-storage/async-storage';

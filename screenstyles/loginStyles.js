@@ -1,9 +1,19 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+    scrollContainer: {
+        flexGrow: 1,
+        backgroundColor: 'white',
+    },
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     companyName: {
-        flexDirection: 'row', // Align cards horizontally
-        alignItems: 'flex-end', // Align items to the bottom
+        flexDirection: 'row',
+        alignItems: 'flex-end',
         marginVertical: '5%',
         padding: 20,
         left: 13,
@@ -24,12 +34,30 @@ const styles = StyleSheet.create({
         marginBottom: '6%',
     },
     input: {
-        marginTop: '5%',
-        marginBottom: '5%',
-        height: 50,
-        paddingStart: 20,
-        padding: 10,
-        borderRadius: 10,
+      width: '80%',
+      height: 50,
+      borderColor: 'gray',
+      borderWidth: 1,
+      borderRadius: 10,
+      marginVertical: 10,
+      marginTop: '5%',
+      marginBottom: '5%',
+      padding: 10,
+      paddingStart: 20,
+    },
+    customButton: {
+        width: '75%',
+        height: '7%',
+        backgroundColor: "#02113F",
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: 20,
+        marginTop: '8%',
+        marginBottom: '8%',
+    },
+    buttonText: {
+        fontSize: 18,
+        color: "#ECE1E1",
     },
     passwordInputContainer: {
         flexDirection: 'row',
@@ -60,6 +88,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: 'gray',
     },
-  });
+});
 
 export default styles;

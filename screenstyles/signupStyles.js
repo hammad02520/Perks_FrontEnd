@@ -1,9 +1,19 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+    scrollContainer: {
+        flexGrow: 1,
+        backgroundColor: 'white',
+    },
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     companyName: {
-        flexDirection: 'row', // Align cards horizontally
-        alignItems: 'flex-end', // Align items to the bottom
+        flexDirection: 'row',
+        alignItems: 'flex-end',
         marginTop: 20,
         padding: 15,
         left: 11,
@@ -65,6 +75,20 @@ const styles = StyleSheet.create({
     loginText: {
         color: 'blue',
     },
+    customButton: {
+        width: '75%',
+        height: '7%',
+        backgroundColor: "#02113F",
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: 20,
+        marginTop: '8%',
+        marginBottom: '8%',
+    },
+    buttonText: {
+        fontSize: 18,
+        color: "#ECE1E1",
+    },
     horizontalLine: {
       height: 1,
       width: '90%',
@@ -75,6 +99,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: 'gray',
     },
-  });
+});
 
 export default styles;

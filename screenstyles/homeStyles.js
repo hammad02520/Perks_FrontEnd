@@ -77,11 +77,11 @@ const styles = StyleSheet.create({
     paddingRight: "10%",
     marginTop: "7%",
     marginBottom: "5%",
-},
-titleText: {
+  },
+  titleText: {
     fontSize: 22,
     fontWeight: "bold",
-},
+  },
   viewAll: {
     color: "grey",
     fontSize: 14,
@@ -168,7 +168,6 @@ titleText: {
     textAlign: "center",
   },
 
-  // for the recommendations
   recommendButton: {
     flexDirection: "row",
     justifyContent: "space-evenly",
@@ -177,7 +176,6 @@ titleText: {
     height: "5.5%",
     backgroundColor: "#1A6F9E",
     borderRadius: 10,
-    // marginTop: "7%",
   },
   recommendText: {
     color: "white",
@@ -262,10 +260,8 @@ titleText: {
     padding: 5,
   },
   loadingContainer: {
-    // top: '35%',
     marginVertical: '56%',
   },
-
 });
 
 export default styles;

@@ -3,21 +3,21 @@ import { StyleSheet, Dimensions } from 'react-native';
 const windowWidth = Dimensions.get('window').width;
 
 const commonRectangleStyles = {
-  width: windowWidth * 0.9,
-  height: 80,
-  marginTop: 20,
-  borderRadius: 10,
-  flexDirection: 'row',
-  alignItems: 'center',
-  paddingHorizontal: 10,
-};
+    width: windowWidth * 0.9,
+    height: 80,
+    marginTop: 20,
+    borderRadius: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+  };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
+      flex: 1,
+      backgroundColor: '#fff',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
   },
   borderradiusforimage:{
     borderradius: '20%',
@@ -33,18 +33,6 @@ const styles = StyleSheet.create({
   codestyles: {
     color: 'green',
     fontWeight: 'bold',
-  },
-  getAndRedeemButton: {
-    backgroundColor: '#02113F',
-    borderRadius: 10,
-    textAlign: 'center',
-    paddingHorizontal: 15,
-    paddingVertical: 5,
-    marginLeft: 10,
-  },
-  getAndRedeemReward: {
-    fontSize: 13,
-    color: 'white',
   },
   topPart: {
     height: '25%',
@@ -101,10 +89,13 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     marginLeft: 10,
+    height: '100%',
+    justifyContent: 'center',
   },
   text: {
     fontSize: 16,
     fontWeight: 'bold',
+    paddingBottom: '1%',
   },
   additionalText: {
     fontSize: 14,
@@ -198,6 +189,39 @@ const styles = StyleSheet.create({
   },
   loadingContainer: {
     marginBottom: 20,
+  },
+  borderradiusforimage:{
+    borderradius: '20%',
+    borderWidth: 1,
+    borderColor: '#bebebe',
+  },
+  image: {
+    width: 70,
+    height: 60,
+    resizeMode: 'contain',
+    backgroundColor: '#D5FFFF',
+  },
+  getAndRedeemButton: {
+    backgroundColor: '#02113F',
+    borderRadius: 10,
+    textAlign: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    marginLeft: 10,
+  },
+  getAndRedeemReward: {
+      fontSize: 13,
+      color: 'white',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginLeft: 20,
+    marginTop: '10%',
+    marginBottom: '5%',
+  },
+  description: {
+    fontSize: 13,
   },
 });
 

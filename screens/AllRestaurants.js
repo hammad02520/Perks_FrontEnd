@@ -1,68 +1,48 @@
-import React, {useEffect, useState} from 'react';
-import { View, Text, Image, TouchableOpacity, ImageBackground, ScrollView, ActivityIndicator } from 'react-native';
-import { SearchBar } from '@rneui/themed';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
-import styles from '../screenstyles/AllRestaurantsstyles';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import {usePerksContext} from "../context";
+import React, { useEffect, useState } from "react";
+import { View, Text, Image, TouchableOpacity, ImageBackground, ScrollView, ActivityIndicator, } from "react-native";
+import { SearchBar } from "@rneui/themed";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
+import styles from "../screenstyles/AllRestaurantsstyles";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { usePerksContext } from "../context";
 import axios from "axios";
-import {BaseUrl} from "../api/BaseUrl";
-import LottieView from 'lottie-react-native';
+import { BaseUrl } from "../api/BaseUrl";
+import LottieView from "lottie-react-native";
 
 const AllRestaurants = () => {
   const navigation = useNavigation();
-    const [restaurantss, setRestaurantss] = useState();
-    const [loadingData, setLoadingData] = useState(false);
-    const {currentUser,userPointsUpdated} = usePerksContext();
+  const [restaurantss, setRestaurantss] = useState();
+  const [loadingData, setLoadingData] = useState(false);
+  const { currentUser, userPointsUpdated } = usePerksContext();
 
-    useEffect(() => {
-        async function loadRestaurants() {
-            setLoadingData(true);
-        try{
-            const response = await axios.get(
-                `${BaseUrl}/api/user-restraurant?userId=${currentUser?.id}`,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }
-            );
-            const data = response.data
-            console.log(response)
-            setRestaurantss(data)
-            setLoadingData(false);
-        }catch (e) {
-            alert(`Error ${e.message}`)
-            setLoadingData(false);
-        }
-        }
+  useEffect(() => {
+    async function loadRestaurants() {
+      setLoadingData(true);
+      try {
+        const response = await axios.get(
+          `${BaseUrl}/api/user-restraurant?userId=${currentUser?.id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data = response.data;
+        console.log(response);
+        setRestaurantss(data);
+        setLoadingData(false);
+      } catch (e) {
+        alert(`Error ${e.message}`);
+        setLoadingData(false);
+      }
+    }
 
-        loadRestaurants();
+    loadRestaurants();
+  }, [userPointsUpdated, currentUser]);
 
-    }, [userPointsUpdated, currentUser]);
-
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState("");
   const [modalFilteredRestaurants, setModalFilteredRestaurants] = useState([]);
-
-  const restaurants = [
-    {
-      name: 'Shishi',
-      points: 200,
-      imageSource: require('../assets/images/shishi.jpg'),
-    },
-    {
-      name: 'Crave',
-      points: 0,
-      imageSource: require('../assets/images/crave.jpg'),
-    },
-    {
-      name: 'Shawarma 27',
-      points: 100,
-      imageSource: require('../assets/images/shawarma.jpg'),
-    },
-    // Add more restaurants here with their image sources
-  ];
 
   // Filter restaurants based on the user's input
   const handleOnChangeText = (text) => {
@@ -79,11 +59,12 @@ const AllRestaurants = () => {
       style={styles.openButton}
       activeOpacity={0.5}
       onPress={() => {
-        navigation.navigate('SpecificVendorStack', { screen: 'SpecificVendor',
-            params: {
-                restraurant: restaurant?.restraurant.name,
-                restId: restaurant?.restraurant.id,
-            }
+        navigation.navigate("SpecificVendorStack", {
+          screen: "SpecificVendor",
+          params: {
+            restraurant: restaurant?.restraurant.name,
+            restId: restaurant?.restraurant.id,
+          },
         });
       }}
       key={restaurant?.id}
@@ -91,20 +72,27 @@ const AllRestaurants = () => {
       <Image
         resizeMode="contain"
         style={styles.restaurantImage}
-        source={{uri:BaseUrl+restaurant?.restraurant?.pic}}
+        source={{ uri: BaseUrl + restaurant?.restraurant?.pic }}
       />
       <View style={styles.restaurantInfo}>
-        <Text style={styles.restaurantname}>{restaurant?.restraurant.name}</Text>
-        <Text style={styles.pointsCard}>points: {restaurant?.total_points}</Text>
+        <Text style={styles.restaurantname}>
+          {restaurant?.restraurant.name}
+        </Text>
+        <Text style={styles.pointsCard}>
+          points: {restaurant?.total_points}
+        </Text>
       </View>
     </TouchableOpacity>
   );
 
   const renderNoRestaurantsView = () => (
     <View style={styles.noRestaurantsView}>
-      <Text style={styles.noRestaurantsText}>Oops! We don't seem to be working with this restaurant yet. Go back to the home page to add it as a recommendation. </Text>
+      <Text style={styles.noRestaurantsText}>
+        Oops! We don't seem to be working with this restaurant yet. Go back to
+        the home page to add it as a recommendation.{" "}
+      </Text>
       <LottieView
-        source={require('../assets/animations/unavailableAnimation.json')}
+        source={require("../assets/animations/unavailableAnimation.json")}
         autoPlay
         loop
       />
@@ -114,12 +102,15 @@ const AllRestaurants = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.topPart}>
-        <ImageBackground style={styles.headerImage} source={require('../assets/images/foodbackground.png')}>
-        {/* Dark overlay */}
-            <View style={styles.overlay} />
-            <View style={styles.overlayContent}>
-                <Text style={styles.titleText}>All Restaurants</Text>
-            </View>
+        <ImageBackground
+          style={styles.headerImage}
+          source={require("../assets/images/foodbackground.png")}
+        >
+          {/* Dark overlay */}
+          <View style={styles.overlay} />
+          <View style={styles.overlayContent}>
+            <Text style={styles.titleText}>All Restaurants</Text>
+          </View>
         </ImageBackground>
       </View>
       <ScrollView style={styles.page}>
@@ -127,24 +118,32 @@ const AllRestaurants = () => {
           placeholder="Search for restaurants..."
           onChangeText={handleOnChangeText}
           value={searchText}
-          searchIcon={<Icon name={"search"} size={24} color="#888"/>}
-          containerStyle={{ width: '100%', backgroundColor: 'rgba(0, 0, 0, 0)', borderBottomWidth: 0, borderTopWidth: 0, marginVertical: 10 }}
-          inputContainerStyle={{backgroundColor: 'rgba(0, 0, 0, 0)', borderBottomWidth: 1}}
-          placeholderTextColor={'#888'}
-          inputStyle={{ color: '#333'}}
-          // , marginVertical: 100
+          searchIcon={<Icon name={"search"} size={24} color="#888" />}
+          containerStyle={{
+            width: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0)",
+            borderBottomWidth: 0,
+            borderTopWidth: 0,
+            marginVertical: 10,
+          }}
+          inputContainerStyle={{
+            backgroundColor: "rgba(0, 0, 0, 0)",
+            borderBottomWidth: 1,
+          }}
+          placeholderTextColor={"#888"}
+          inputStyle={{ color: "#333" }}
         />
-          {loadingData ? (
-            <View style={styles.loadingContainer}>
-              <ActivityIndicator size="larger" color="#132D7B" />
-            </View>
-          ) : modalFilteredRestaurants?.length > 0 ? (
-            modalFilteredRestaurants.map(renderRestaurant)
-          ) : searchText !== '' ? ( // Check if user has entered a search text
-            renderNoRestaurantsView()
-          ) : (
-            restaurantss?.map(renderRestaurant)
-          )}
+        {loadingData ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="larger" color="#132D7B" />
+          </View>
+        ) : modalFilteredRestaurants?.length > 0 ? (
+          modalFilteredRestaurants.map(renderRestaurant)
+        ) : searchText !== "" ? ( // Check if user has entered a search text
+          renderNoRestaurantsView()
+        ) : (
+          restaurantss?.map(renderRestaurant)
+        )}
       </ScrollView>
     </SafeAreaView>
   );

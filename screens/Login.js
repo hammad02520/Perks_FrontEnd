@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TextInput, Image, StyleSheet, TouchableOpacity, ActivityIndicator} from 'react-native';
+import { View, Text, ScrollView, TextInput, TouchableOpacity, ActivityIndicator} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
-import { logoSvgCode } from './Welcome'; // Adjust the path to match your file structure
-import globalStyles from '../styles';
+import { logoSvgCode } from './Welcome';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from '../screenstyles/loginStyles';
 import {usePerksContext} from "../context";
@@ -15,7 +14,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function Login(){
     const navigation = useNavigation();
     const [passwordVisible, setPasswordVisible] = useState(false);
-    // const [phoneNumber, setPhoneNumber] = useState(''); // State to store phone number
     const [phone_number, setphone_number] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -72,8 +70,8 @@ export default function Login(){
 
 
     return (
-        <ScrollView contentContainerStyle={globalStyles.scrollContainer}>
-            <View style={globalStyles.container}>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+            <View style={styles.container}>
 
                 <View style={styles.companyName}>
                     <View style={styles.logoImg}>
@@ -91,7 +89,7 @@ export default function Login(){
                     keyboardType="phone-pad"
                     value={phone_number}
                     onChangeText={setphone_number}
-                    style={[globalStyles.input, styles.input]} />
+                    style={styles.input} />
 
                 <View style={styles.passwordInputContainer}>
                     <TextInput
@@ -99,7 +97,7 @@ export default function Login(){
                         secureTextEntry={!passwordVisible}
                         value={password}
                         onChangeText={setPassword}
-                        style={[globalStyles.input, styles.input]}
+                        style={styles.input}
                     />
                     <TouchableOpacity
                         style={styles.passwordVisibilityIcon}
@@ -109,7 +107,7 @@ export default function Login(){
                             name={passwordVisible ? 'eye' : 'eye-slash'}
                             size={24}
                             padding={5}
-                            color="#333" // Adjust the color as needed
+                            color="#333"
                         />
                     </TouchableOpacity>
                 </View>
@@ -119,10 +117,10 @@ export default function Login(){
                 ) : (
 
                 <TouchableOpacity
-                    style={globalStyles.customButton}
+                    style={styles.customButton}
                     onPress={handleLogin}
                 >
-                    <Text style={globalStyles.buttonText}>Login</Text>
+                    <Text style={styles.buttonText}>Login</Text>
                 </TouchableOpacity>
                 )}
 

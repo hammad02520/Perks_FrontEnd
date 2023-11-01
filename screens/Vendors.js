@@ -1,18 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import { View, Text, Image, TouchableOpacity, ScrollView, ImageBackground, ActivityIndicator } from 'react-native';
-import { logoSvgCode } from './Welcome'; // Adjust the path to match your file structure
-import { SvgXml } from 'react-native-svg';
+import { View, Text, Image, TouchableOpacity, ImageBackground, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import globalStyles from '../styles';
 import styles from '../screenstyles/vendorsStyles';
-import { Platform } from 'react-native';
 import {usePerksContext} from "../context";
 import axios from "axios";
 import {BaseUrl} from "../api/BaseUrl";
 
-const Vendor = (props) => {
-  const navigation = useNavigation();
+const Vendor = () => {
+    const navigation = useNavigation();
     const [restaurants, setRestaurants] = useState();
     const [loadingData, setLoadingData] = useState(false);
     const {currentUser, userPointsUpdated} = usePerksContext();
@@ -40,50 +36,48 @@ const Vendor = (props) => {
         loadRestaurants()
     }, [currentUser, userPointsUpdated]);
 
-
-  return (
-    <SafeAreaView style={[globalStyles.container, styles.container]}>
-        <View style={styles.topPart}>
-            <ImageBackground style={styles.headerImage} source={require('../assets/images/foodbackground.png')}>
-            {/* Dark overlay */}
-                <View style={styles.overlay} />
-                <View style={styles.overlayContent}>
-                    <Text style={styles.titleText}>All Your Restaurants</Text>
-                </View>
-            </ImageBackground>
-        </View>
-        {loadingData ? (
-            <View style={styles.loadingContainer}>
-              <ActivityIndicator size="larger" color="#132D7B" />
-            </View>
-          ) :  restaurants?.length > 0 ? (
-            restaurants?.map((item) => {
-                return   <TouchableOpacity
-                    key={item?.id}
-                    style={styles.openButton}
-                    activeOpacity={0.5}
-                    onPress={() => {
-                        navigation.navigate('SpecificVendorStack', { screen: 'SpecificVendor',
-                            params: {
-                                restraurant: item?.restraurant.name,
-                                restId: item?.restraurant.id,
-                            }
-                        });
-                    }}
-                >
-                    <Image resizeMode="stretch" style={styles.shawarmaImg} source={{uri:BaseUrl+item?.restraurant?.pic}}/>
-                    <View style={styles.restaurantInfo}>
-                        <Text style={styles.restaurantname}>{item?.restraurant.name}</Text>
-                        <Text style={styles.pointsCard}>points: {item?.total_points}</Text>
+    return (
+        <SafeAreaView style={styles.container}>
+            <View style={styles.topPart}>
+                <ImageBackground style={styles.headerImage} source={require('../assets/images/foodbackground.png')}>
+                    <View style={styles.overlay} />
+                    <View style={styles.overlayContent}>
+                        <Text style={styles.titleText}>All Your Restaurants</Text>
                     </View>
-                </TouchableOpacity>
-            })
-        ) : (
-            <Text style={[styles.restaurantname, {color:"black"}]}>No Restaurants</Text>
-        )}
-
-  </SafeAreaView>
-  );
+                </ImageBackground>
+            </View>
+            {loadingData ? (
+                <View style={styles.loadingContainer}>
+                <ActivityIndicator size="larger" color="#132D7B" />
+                </View>
+            ) :  restaurants?.length > 0 ? (
+                restaurants?.map((item) => {
+                    return   <TouchableOpacity
+                        key={item?.id}
+                        style={styles.openButton}
+                        activeOpacity={0.5}
+                        onPress={() => {
+                            navigation.navigate('SpecificVendorStack', { screen: 'SpecificVendor',
+                                params: {
+                                    restraurant: item?.restraurant.name,
+                                    restId: item?.restraurant.id,
+                                }
+                            });
+                        }}
+                    >
+                        <Image resizeMode="stretch" style={styles.shawarmaImg} source={{uri:BaseUrl+item?.restraurant?.pic}}/>
+                        <View style={styles.restaurantInfo}>
+                            <Text style={styles.restaurantname}>{item?.restraurant.name}</Text>
+                            <Text style={styles.pointsCard}>points: {item?.total_points}</Text>
+                        </View>
+                    </TouchableOpacity>
+                })
+            ) : (
+                <Text style={[styles.restaurantname, {color:"black"}]}>No Restaurants</Text>
+            )}
+            
+        </SafeAreaView>
+    );
 };
 
 export default Vendor;

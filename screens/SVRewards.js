@@ -1,15 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  Dimensions,
-  Image,
-  TouchableOpacity,
-  Platform,
-  Modal,
-  Alert,
-  ImageBackground,
-} from 'react-native';
+import { View, Text, Dimensions, Image, TouchableOpacity, Platform, Modal, Alert, ImageBackground, } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styles from '../screenstyles/svRewardStyles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -20,16 +10,6 @@ import {useNavigation} from "@react-navigation/native";
 import LottieView from 'lottie-react-native';
 
 const windowWidth = Dimensions.get('window').width;
-
-
-const initialItems = [
-  { title: "Free burger", description: "You only spent 3,000 points", redeemed: false },
-  { title: "Free shawarma", description: "You only spent 2,800 points", redeemed: false },
-  { title: "Free soda", description: "You only spent 1,000 points", redeemed: false },
-  { title: "Free ice cream", description: "You only spent 1,200 points", redeemed: false },
-  { title: "Free fries", description: "You only spent 800 points", redeemed: false },
-  { title: "Free salad", description: "You only spent 900 points", redeemed: false },
-];
 
 const RewardItem = ({ item, onPress, currentrdId }) => {
   const containerStyle = Platform.OS === 'ios' ? styles.rectangleIOS : styles.rectangleAndroid;
@@ -63,7 +43,6 @@ const SVRewards = (props) => {
   const navigation = useNavigation();
   const [showModal, setShowModal] = useState(false);
   const [itemsToRedeem, setItemsToRedeem] = useState([]);
-  const [items, setItems] = useState(initialItems);
   const [itemToRemove, setItemToRemove] = useState(null);
   const [loadingRedeem, setLoadingRedeem] = useState(false);
   const [redeemedRewards, setRedeemedRewards] = useState();
@@ -152,8 +131,7 @@ const SVRewards = (props) => {
               {
                 text: 'OK',
                 onPress: () => {
-                  // Update the state to remove the redeemed item
-                  // setItems(updatedItems);
+                  // Update the state to remove the redeemed item and setItems(updatedItems);
                   setItemToRemove(null);
                   handleCloseModal();
                 },
@@ -173,7 +151,6 @@ const SVRewards = (props) => {
       alert(`Error ${e.message}`)
       setLoadingRedeem(false);
     }
-
 
     setItemToRemove(item);
   };
@@ -220,7 +197,6 @@ const SVRewards = (props) => {
         <Text style={styles.recommendText}>Your last 5 redeemed rewards</Text>
       </TouchableOpacity>
       <Modal visible={showModal} animationType="fade" transparent={true}>
-        {/* ... (unchanged modal code) */}
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalText}>You will be provided with a special code that will only appear once.</Text>

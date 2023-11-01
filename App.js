@@ -159,7 +159,10 @@ export default function MainApp() {
         <Stack.Screen
           name="RedeemedRewards"
           component={RedeemedRewards}
-          options={{ headerShown: false }}
+          options={{
+            headerTitle: '',
+            headerTransparent: true,
+          }}
         />
         <Stack.Screen
           name="AllRestaurants"

@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { Text, View, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import globalStyles from '../styles';
 import styles from '../screenstyles/welcomeStyles';
 import {usePerksContext} from "../context";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -18,35 +17,28 @@ export const logoSvgCode = `
 `;
 
 const WelcomePage = (props) => {
-    const [token, setToken] = useState();
-    const navigation = useNavigation();
-    const {setCurrentUser} = usePerksContext()
+  const [token, setToken] = useState();
+  const navigation = useNavigation();
+  const {setCurrentUser} = usePerksContext()
 
-    useEffect(() => {
-        const tryLogin = async () => {
-            const userData = await AsyncStorage.getItem('user');
-            const  token = await  AsyncStorage.getItem("authToken");
+  useEffect(() => {
+      const tryLogin = async () => {
+          const userData = await AsyncStorage.getItem('user');
+          const  token = await  AsyncStorage.getItem("authToken");
 
-            // if (!userData) {
-            //     props.navigation.navigate('Login');
-            //     return;
-            // }
-            if (token){
-                setToken(token)
-                const transformedData = JSON.parse(userData);
-                setCurrentUser(transformedData)
+          if (token){
+              setToken(token)
+              const transformedData = JSON.parse(userData);
+              setCurrentUser(transformedData)
 
-                props.navigation.navigate('MainScreens');
-            }
+              props.navigation.navigate('MainScreens');
+          }
+      };
+      tryLogin()
+  }, [token]);
 
-        };
-
-        tryLogin()
-
-    }, [token]);
   return (
-
-    <SafeAreaView style={[globalStyles.container, styles.container]}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.christmas}>
         <Image style={styles.christmasImage} source={require('../assets/images/christmas.png')} />
 
@@ -54,12 +46,8 @@ const WelcomePage = (props) => {
           <SvgXml xml={logoSvgCode} width="100%" height="100%" />
         </View>
       </View>
-      <Text style={styles.title}>
-        Perks
-      </Text>
-      <Text style={styles.paragraph}>
-        A platform built to help you earn your money back.
-      </Text>
+      <Text style={styles.title}> Perks </Text>
+      <Text style={styles.paragraph}> A platform built to help you earn your money back. </Text>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.touchableButton}

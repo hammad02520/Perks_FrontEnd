@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, ActivityIndicator, Alert, TouchableOpacity } from 'react-native';
-import {Button} from "@rneui/themed";
+import { Text, View, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { useNavigation, useFocusEffect  } from '@react-navigation/native';
 import styles from '../screenstyles/scannerStyles';
 import { usePerksContext } from '../context';
 import axios from 'axios';
 import { BaseUrl } from '../api/BaseUrl';
-export default function App(message) {
+
+export default function App() {
   const navigation = useNavigation();
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);

@@ -1,16 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import {
-  View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity, Alert, ActivityIndicator
-} from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, ScrollView, TextInput, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 import { logoSvgCode } from './Welcome';
-import globalStyles from '../styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from '../screenstyles/signupStyles';
 import axios from "axios";
 import {BaseUrl} from "../api/BaseUrl";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function SignUp() {
   const navigation = useNavigation();
@@ -65,8 +61,8 @@ export default function SignUp() {
 
 
   return (
-    <ScrollView contentContainerStyle={globalStyles.scrollContainer}>
-      <View style={globalStyles.container}>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <View style={styles.container}>
         <View style={styles.companyName}>
           <View style={styles.logoImg}>
             <SvgXml xml={logoSvgCode} width="100%" height="100%" />
@@ -95,8 +91,8 @@ export default function SignUp() {
         <TextInput
           placeholder="Phone number: 255*********"
           keyboardType="phone-pad"
-          value={phoneNumber}  // Value is set to phoneNumber state
-          onChangeText={setPhoneNumber}  // Updates phoneNumber state
+          value={phoneNumber}
+          onChangeText={setPhoneNumber}
           style={styles.input}
         />
         <TextInput
@@ -140,10 +136,10 @@ export default function SignUp() {
           />
         ) : (
         <TouchableOpacity
-          style={globalStyles.customButton}
+          style={styles.customButton}
           onPress={handleSignup}
         >
-          <Text style={globalStyles.buttonText}>Sign Up</Text>
+          <Text style={styles.buttonText}>Sign Up</Text>
         </TouchableOpacity>
         )}
         <View style={styles.horizontalLine}></View>

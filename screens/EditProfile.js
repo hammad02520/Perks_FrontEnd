@@ -1,20 +1,8 @@
 import React, { useState } from 'react';
-import {
-    View,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    Image,
-    SafeAreaView,
-    ScrollView,
-    StyleSheet,
-    Alert
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { logoSvgCode, profilepic, editicon, profileicon, phonecallicon, bookicon, calendericon, mailicon, globeicon, logoutIcon } from '../svgData/svgData';
+import { profilepic } from '../svgData/svgData';
 import * as ImagePicker from 'expo-image-picker';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import styles from '../screenstyles/editProfileStyles';
 import { usePerksContext } from '../context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -28,11 +16,9 @@ const EditProfile = ({navigation}) => {
     const [lastName, setLastName] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [gender, setGender] = useState('');
-    const [dob, setDob] = useState(new Date());
     const {setCurrentUser} = usePerksContext();
     const [email, setEmail] = useState('');
-    const [isLoadind, setIsLoadind] = useState(false)
-
+    const [isLoading, setIsLoading] = useState(false)
 
     const getPermissionAsync = async () => {
         const status = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -55,7 +41,7 @@ const EditProfile = ({navigation}) => {
         if (!hasPermission) {
             return;
         }
-        // const image = await ImagePicker.launchImageLibraryAsync();
+
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
@@ -64,7 +50,6 @@ const EditProfile = ({navigation}) => {
         });
 
         // Explore the result
-
         if (!result.canceled) {
             setpickedImage(result.assets[0].uri);
             props.onImageTaken(result.assets[0].uri);
@@ -94,7 +79,7 @@ const EditProfile = ({navigation}) => {
 
     const handleSave = async () => {
         try {
-            setIsLoadind(true);
+            setIsLoading(true);
 
             const formData = await prepareFormData();
             const response = await axios.post(`${BaseUrl}/api/auth/update-user`, formData, {
@@ -126,7 +111,7 @@ const EditProfile = ({navigation}) => {
                 Alert.alert('Unknown Error', 'An unknown error occurred.');
             }
         } finally {
-            setIsLoadind(false);
+            setIsLoading(false);
         }
     };
 
@@ -158,23 +143,26 @@ const EditProfile = ({navigation}) => {
                 </View>
 
                 <View style={styles.inputcontainer}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="First Name: John"
-                        value={firstName}
-                        onChangeText={(text) => setFirstName(text)}
-                    />
+                    <View style={styles.inputcontainer2}>
+                        <TextInput
+                            style={styles.input2}
+                            placeholder="First Name: John"
+                            value={firstName}
+                            onChangeText={(text) => setFirstName(text)}
+                        />
 
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Last Name: Doe"
-                        value={lastName}
-                        onChangeText={(text) => setLastName(text)}
-                    />
+                        <TextInput
+                            style={styles.input2}
+                            placeholder="Last Name: Doe"
+                            value={lastName}
+                            onChangeText={(text) => setLastName(text)}
+                        />
+                    </View>
 
                     <TextInput
                         style={styles.input}
                         placeholder="Phone Number: 255*********"
+                        keyboardType="phone-pad"
                         value={phoneNumber}
                         onChangeText={(text) => setPhoneNumber(text)}
                     />
@@ -186,15 +174,9 @@ const EditProfile = ({navigation}) => {
                         onChangeText={(text) => setGender(text)}
                     />
 
-                    {/* Date of Birth */}
-                    {/* <DateTimePicker
-                        value={dob}
-                        mode="date"
-                        onChange={(event, selectedDate) => setDob(selectedDate)}
-                    /> */}
-
                     <TextInput
                         style={styles.input}
+                        keyboardType="email-address"
                         placeholder="Email: JohnDoe@gmail.com"
                         value={email}
                         onChangeText={(text) => setEmail(text)}
@@ -206,7 +188,7 @@ const EditProfile = ({navigation}) => {
                 </TouchableOpacity>
             </View>
             <Dialog
-                isVisible={isLoadind}
+                isVisible={isLoading}
             >
                 <Text style={{ fontFamily: "", fontSize: 10, textAlign: "center" }}>Editing Profile..</Text>
                 <Dialog.Loading
