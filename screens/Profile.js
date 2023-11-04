@@ -79,10 +79,7 @@ const Profile = () => {
                     style={styles.profile3}
                 />
             ):(
-              <TouchableOpacity onPress={() => {
-              }} style={styles.profile2}>
-                    <SvgXml xml={profilepic} style={styles.profile} />
-              </TouchableOpacity>
+                <SvgXml xml={profilepic} style={styles.profile2} width={90} />
             )}
           <View style={styles.profileText}>
             <Text style={styles.nameText}>{currentUser?.fname} {currentUser?.lname}</Text>
@@ -106,11 +103,13 @@ const Profile = () => {
         </View>
         <View style={[styles.rectangleContainer]}>
             <SvgXml xml={phonecallicon} style={styles.profileIcon} />
-            <Text style={styles.profileTextCenter}>{currentUser.phone_number}</Text>
+            <Text style={styles.profileTextCenter}>+{currentUser.phone_number}</Text>
         </View>
         <View style={[styles.rectangleContainer]}>
             <SvgXml xml={profileicon} style={styles.profileIcon} />
-            <Text style={styles.profileTextCenter}>Gender</Text>
+            <Text style={styles.profileTextCenter}>
+                {currentUser.gender ? currentUser.gender : 'Gender'}
+            </Text>        
         </View>
         <View style={[styles.rectangleContainer]}>
             <SvgXml xml={calendericon} style={styles.profileIcon} />

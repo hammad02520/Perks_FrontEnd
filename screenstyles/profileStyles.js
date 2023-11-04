@@ -34,8 +34,11 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   profile2: {
-    alignSelf: 'left',
-    right: '30%',
+    marginLeft: 15,
+    marginRight: 10,  
+    borderWidth: 3,
+    borderColor: 'white',
+    borderRadius: 50,
   },
   profile3: {
     height: 75,

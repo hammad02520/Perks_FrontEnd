@@ -45,8 +45,12 @@ const EditProfile = ({navigation}) => {
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
-            aspect: [16, 9],
+            aspect: [3, 4],
             quality: 1,
+            resize: {
+                width: 75,
+                height: 75,
+            },    
         });
 
         // Explore the result
